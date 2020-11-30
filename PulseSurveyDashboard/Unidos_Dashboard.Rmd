@@ -1,0 +1,3829 @@
+---
+title: "By the Numbers: Latinos in the Time of Coronavirus"
+output: 
+  flexdashboard::flex_dashboard:
+    vertical_layout: scroll
+    logo: logo.png
+    theme: flatly
+    css: yeti2.css
+    orientation: columns
+      
+---
+
+```{r, setup, include=FALSE}
+
+# Modify the Tech line - "Click on the drop-down Menu above to explore different topics. All graphs can be exported, and data can also be  downloaded in Excel and PDF formats. We strongly recommend viewing the dashboard in full-screen format."
+
+# add note to the bottom of DataTables
+
+# spot check
+
+library(knitr)
+library(openxlsx)
+library(tidyverse)
+library(plotly)
+library(DT)
+library(htmltools)
+```
+
+```{r, national, include=FALSE}
+national_income <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Income table.xlsx', sheet='Two_week_race')
+national_income$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_income <- national_income %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+
+national_income$weeks <- factor(national_income$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_income <- national_income %>% arrange(weeks)
+
+#############################
+
+national_mortgage <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1a Missed last month’s payment (owners)_rev1.xlsx', sheet='Two_week_race')
+national_mortgage$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_mortgage <- national_mortgage %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+
+national_mortgage$weeks <- factor(national_mortgage$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_mortgage <- national_mortgage %>% arrange(weeks)
+
+#############################
+
+national_rent <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1b Missed last month’s payment (renters)_rev1.xlsx', sheet='Two_week_race')
+national_rent$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_rent <- national_rent %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+national_rent$weeks <- factor(national_rent$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_rent <- national_rent %>% arrange(weeks)
+
+#############################
+
+national_cancelled <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2 Classes were cancelled.xlsx', sheet='Two_week_race')
+national_cancelled$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_cancelled <- national_cancelled %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+national_cancelled$weeks <- factor(national_cancelled$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_cancelled <- national_cancelled %>% arrange(weeks)
+
+#############################
+
+national_distance <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2 Classes were moved to a distance learning format.xlsx', sheet='Two_week_race')
+national_distance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_distance <- national_distance %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+national_distance$weeks <- factor(national_distance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_distance <- national_distance %>% arrange(weeks)
+
+#############################
+
+national_mental <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2a_b Experienced symptoms of anxiety OR depression more than half the days or nearly every day during the past 7 days.xlsx', sheet='Two_week_race')
+national_mental$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_mental <- national_mental %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+national_mental$weeks <- factor(national_mental$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_mental <- national_mental %>% arrange(weeks)
+
+#############################
+
+national_food <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2b Sometimes or often do not have enough food to eat.xlsx', sheet='Two_week_race')
+national_food$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_food <- national_food %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+national_food$weeks <- factor(national_food$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_food <- national_food %>% arrange(weeks)
+
+#############################
+
+national_nodevice <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Devices rarely or never available for educational purposes.xlsx', sheet='Two_week_race')
+national_nodevice$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_nodevice <- national_nodevice %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+national_nodevice$weeks <- factor(national_nodevice$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_nodevice <- national_nodevice %>% arrange(weeks)
+
+#############################
+
+national_nointernet <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Internet rarely or never available for educational purposes.xlsx', sheet='Two_week_race')
+national_nointernet$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_nointernet <- national_nointernet %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+national_nointernet$weeks <- factor(national_nointernet$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_nointernet <- national_nointernet %>% arrange(weeks)
+
+#############################
+
+national_noinsurance <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 No health insurance.xlsx', sheet='Two_week_race')
+national_noinsurance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_noinsurance <- national_noinsurance %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+national_noinsurance$weeks <- factor(national_noinsurance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_noinsurance <- national_noinsurance %>% arrange(weeks)
+
+#############################
+
+national_pubinsurance <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Public insurance.xlsx', sheet='Two_week_race')
+national_pubinsurance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_pubinsurance <- national_pubinsurance %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+national_pubinsurance$weeks <- factor(national_pubinsurance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_pubinsurance <- national_pubinsurance %>% arrange(weeks)
+
+#############################
+
+national_privinsurance <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Private insurance.xlsx', sheet='Two_week_race')
+national_privinsurance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_privinsurance <- national_privinsurance %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+national_privinsurance$weeks <- factor(national_privinsurance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_privinsurance <- national_privinsurance %>% arrange(weeks)
+
+#############################
+
+national_food_child <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3b Sometimes or often do not have enough food to eat—for households with children present.xlsx', sheet='Two_week_race')
+national_food_child$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+
+national_food_child <- national_food_child %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/tDenom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1),
+         asian_perc = round(Num_NHA/Denom_NHA*100,1),
+         black_perc = round(Num_NHB/Denom_NHB*100,1),
+         other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
+  select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
+
+national_food_child$weeks <- factor(national_food_child$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+national_food_child <- national_food_child %>% arrange(weeks)
+
+```
+
+```{r, income, include=FALSE}
+income <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Income table.xlsx', sheet='Two_week_aggregate')
+
+income$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+income$weeks <- factor(income$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+income <- income %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+income_us <- income %>%
+  filter(EST_ST == "US")
+
+income_az <- income %>%
+  filter(EST_ST == "Arizona")
+
+income_ca <- income %>%
+  filter(EST_ST == "California")
+
+income_fl <- income %>%
+  filter(EST_ST == "Florida")
+
+income_nv <- income %>%
+  filter(EST_ST == "Nevada")
+
+income_tx <- income %>%
+  filter(EST_ST == "Texas")
+
+income_co <- income %>%
+  filter(EST_ST == "Colorado")
+
+```
+
+```{r, food, include=FALSE}
+# Food Table 2b
+
+food2b <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2b Sometimes or often do not have enough food to eat.xlsx', sheet='Two_week_aggregate')
+food2b$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+food2b$weeks <- factor(food2b$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+food2b <- food2b %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+food2b_us <- food2b %>%
+  filter(EST_ST == "US")
+
+food2b_az <- food2b %>%
+  filter(EST_ST == "Arizona")
+
+food2b_ca <- food2b %>%
+  filter(EST_ST == "California")
+
+food2b_fl <- food2b %>%
+  filter(EST_ST == "Florida")
+
+food2b_nv <- food2b %>%
+  filter(EST_ST == "Nevada")
+
+food2b_tx <- food2b %>%
+  filter(EST_ST == "Texas")
+
+food2b_co <- food2b %>%
+  filter(EST_ST == "Colorado")
+
+# Food Table 3b
+
+food3b <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3b Sometimes or often do not have enough food to eat—for households with children present.xlsx', sheet='Two_week_aggregate')
+food3b$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+food3b$weeks <- factor(food3b$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+food3b <- food3b %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+food3b_us <- food3b %>%
+  filter(EST_ST == "US")
+
+food3b_az <- food3b %>%
+  filter(EST_ST == "Arizona")
+
+food3b_ca <- food3b %>%
+  filter(EST_ST == "California")
+
+food3b_fl <- food3b %>%
+  filter(EST_ST == "Florida")
+
+food3b_nv <- food3b %>%
+  filter(EST_ST == "Nevada")
+
+food3b_tx <- food3b %>%
+  filter(EST_ST == "Texas")
+
+food3b_co <- food3b %>%
+  filter(EST_ST == "Colorado")
+
+## Food table for dt
+
+food2b_dt <- food2b %>%
+  rename(food2b_overall_perc = overall_perc,
+         food2b_hisp_perc = hisp_perc,
+         food2b_white_perc = white_perc)
+food3b_dt <- food3b %>%
+  rename(food3b_overall_perc = overall_perc,
+         food3b_hisp_perc = hisp_perc,
+         food3b_white_perc = white_perc) %>%
+  select(food3b_overall_perc, food3b_hisp_perc, food3b_white_perc)
+
+food_dt <- cbind(food2b_dt, food3b_dt)
+
+```
+
+```{r, health, include=FALSE}
+# Health Table 3
+
+health3 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 No health insurance.xlsx', sheet='Two_week_aggregate')
+health3$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+health3$weeks <- factor(health3$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+health3 <- health3 %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+health3_us <- health3 %>%
+  filter(EST_ST == "US")
+
+health3_az <- health3 %>%
+  filter(EST_ST == "Arizona")
+
+health3_ca <- health3 %>%
+  filter(EST_ST == "California")
+
+health3_fl <- health3 %>%
+  filter(EST_ST == "Florida")
+
+health3_nv <- health3 %>%
+  filter(EST_ST == "Nevada")
+
+health3_tx <- health3 %>%
+  filter(EST_ST == "Texas")
+
+health3_co <- health3 %>%
+  filter(EST_ST == "Colorado")
+
+# Health Table 3
+
+health3_2 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Public insurance.xlsx', sheet='Two_week_aggregate')
+health3_2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+health3_2$weeks <- factor(health3_2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+health3_2 <- health3_2 %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+health3_2_us <- health3_2 %>%
+  filter(EST_ST == "US")
+
+health3_2_az <- health3_2 %>%
+  filter(EST_ST == "Arizona")
+
+health3_2_ca <- health3_2 %>%
+  filter(EST_ST == "California")
+
+health3_2_fl <- health3_2 %>%
+  filter(EST_ST == "Florida")
+
+health3_2_nv <- health3_2 %>%
+  filter(EST_ST == "Nevada")
+
+health3_2_tx <- health3_2 %>%
+  filter(EST_ST == "Texas")
+
+health3_2_co <- health3_2 %>%
+  filter(EST_ST == "Colorado")
+
+# Health Table 3
+
+health4 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Private insurance.xlsx', sheet='Two_week_aggregate')
+health4$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+health4$weeks <- factor(health4$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+health4 <- health4 %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+health4_us <- health4 %>%
+  filter(EST_ST == "US")
+
+health4_az <- health4 %>%
+  filter(EST_ST == "Arizona")
+
+health4_ca <- health4 %>%
+  filter(EST_ST == "California")
+
+health4_fl <- health4 %>%
+  filter(EST_ST == "Florida")
+
+health4_nv <- health4 %>%
+  filter(EST_ST == "Nevada")
+
+health4_tx <- health4 %>%
+  filter(EST_ST == "Texas")
+
+health4_co <- health4 %>%
+  filter(EST_ST == "Colorado")
+
+
+## Health table for dt
+
+health4_dt <- health4 %>%
+  rename(health4_overall_perc = overall_perc,
+         health4_hisp_perc = hisp_perc,
+         health4_white_perc = white_perc)
+health3_2_dt <- health3_2 %>%
+  rename(health3_2_overall_perc = overall_perc,
+         health3_2_hisp_perc = hisp_perc,
+         health3_2_white_perc = white_perc) %>%
+  select(health3_2_overall_perc, health3_2_hisp_perc, health3_2_white_perc)
+
+health_dt <- cbind(health4_dt, health3_2_dt)
+
+```
+
+```{r, education, include=FALSE}
+# Education Table 2
+
+education2 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2 Classes were cancelled.xlsx', sheet='Two_week_aggregate')
+education2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+education2$weeks <- factor(education2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+education2 <- education2 %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+education2_us <- education2 %>%
+  filter(EST_ST == "US")
+
+education2_az <- education2 %>%
+  filter(EST_ST == "Arizona")
+
+education2_ca <- education2 %>%
+  filter(EST_ST == "California")
+
+education2_fl <- education2 %>%
+  filter(EST_ST == "Florida")
+
+education2_nv <- education2 %>%
+  filter(EST_ST == "Nevada")
+
+education2_tx <- education2 %>%
+  filter(EST_ST == "Texas")
+
+education2_co <- education2 %>%
+  filter(EST_ST == "Colorado")
+
+# Education Table 2_2
+
+education2_2 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2 Classes were moved to a distance learning format.xlsx', sheet='Two_week_aggregate')
+education2_2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+education2_2$weeks <- factor(education2_2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+education2_2 <- education2_2 %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+education2_2_us <- education2_2 %>%
+  filter(EST_ST == "US")
+
+education2_2_az <- education2_2 %>%
+  filter(EST_ST == "Arizona")
+
+education2_2_ca <- education2_2 %>%
+  filter(EST_ST == "California")
+
+education2_2_fl <- education2_2 %>%
+  filter(EST_ST == "Florida")
+
+education2_2_nv <- education2_2 %>%
+  filter(EST_ST == "Nevada")
+
+education2_2_tx <- education2_2 %>%
+  filter(EST_ST == "Texas")
+
+education2_2_co <- education2_2 %>%
+  filter(EST_ST == "Colorado")
+
+## edu2 table for dt
+
+education2_dt <- education2 %>%
+  rename(education2_overall_perc = overall_perc,
+         education2_hisp_perc = hisp_perc,
+         education2_white_perc = white_perc)
+education2_2_dt <- education2_2 %>%
+  rename(education2_2_overall_perc = overall_perc,
+         education2_2_hisp_perc = hisp_perc,
+         education2_2_white_perc = white_perc) %>%
+  select(education2_2_overall_perc, education2_2_hisp_perc, education2_2_white_perc)
+
+edu2_dt <- cbind(education2_dt, education2_2_dt)
+
+# Education Table 3
+
+education3 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Devices rarely or never available for educational purposes.xlsx', sheet='Two_week_aggregate')
+education3$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+education3$weeks <- factor(education3$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+education3 <- education3 %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+education3_us <- education3 %>%
+  filter(EST_ST == "US")
+
+education3_az <- education3 %>%
+  filter(EST_ST == "Arizona")
+
+education3_ca <- education3 %>%
+  filter(EST_ST == "California")
+
+education3_fl <- education3 %>%
+  filter(EST_ST == "Florida")
+
+education3_nv <- education3 %>%
+  filter(EST_ST == "Nevada")
+
+education3_tx <- education3 %>%
+  filter(EST_ST == "Texas")
+
+education3_co <- education3 %>%
+  filter(EST_ST == "Colorado")
+
+# Education Table 3_2
+
+education3_2 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Internet rarely or never available for educational purposes.xlsx', sheet='Two_week_aggregate')
+education3_2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+education3_2$weeks <- factor(education3_2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+education3_2 <- education3_2 %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+education3_2_us <- education3_2 %>%
+  filter(EST_ST == "US")
+
+education3_2_az <- education3_2 %>%
+  filter(EST_ST == "Arizona")
+
+education3_2_ca <- education3_2 %>%
+  filter(EST_ST == "California")
+
+education3_2_fl <- education3_2 %>%
+  filter(EST_ST == "Florida")
+
+education3_2_nv <- education3_2 %>%
+  filter(EST_ST == "Nevada")
+
+education3_2_tx <- education3_2 %>%
+  filter(EST_ST == "Texas")
+
+education3_2_co <- education3_2 %>%
+  filter(EST_ST == "Colorado")
+
+## edu3 table for dt
+
+education3_dt <- education3 %>%
+  rename(education3_overall_perc = overall_perc,
+         education3_hisp_perc = hisp_perc,
+         education3_white_perc = white_perc)
+education3_2_dt <- education3_2 %>%
+  rename(education3_2_overall_perc = overall_perc,
+         education3_2_hisp_perc = hisp_perc,
+         education3_2_white_perc = white_perc) %>%
+  select(education3_2_overall_perc, education3_2_hisp_perc, education3_2_white_perc)
+
+edu3_dt <- cbind(education3_dt, education3_2_dt)
+
+```
+
+```{r, housing, include=FALSE}
+# Housing Table 1a
+
+housing1a <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1a Missed last month’s payment (owners)_rev1.xlsx', sheet='Two_week_aggregate')
+housing1a$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+housing1a$weeks <- factor(housing1a$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+housing1a <- housing1a %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+housing1a_us <- housing1a %>%
+  filter(EST_ST == "US")
+
+housing1a_az <- housing1a %>%
+  filter(EST_ST == "Arizona")
+
+housing1a_ca <- housing1a %>%
+  filter(EST_ST == "California")
+
+housing1a_fl <- housing1a %>%
+  filter(EST_ST == "Florida")
+
+housing1a_nv <- housing1a %>%
+  filter(EST_ST == "Nevada")
+
+housing1a_tx <- housing1a %>%
+  filter(EST_ST == "Texas")
+
+housing1a_co <- housing1a %>%
+  filter(EST_ST == "Colorado")
+
+# Housing Table 1b
+
+housing1b <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1b Missed last month’s payment (renters)_rev1.xlsx', sheet='Two_week_aggregate')
+housing1b$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+housing1b$weeks <- factor(housing1b$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+housing1b <- housing1b %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+housing1b_us <- housing1b %>%
+  filter(EST_ST == "US")
+
+housing1b_az <- housing1b %>%
+  filter(EST_ST == "Arizona")
+
+housing1b_ca <- housing1b %>%
+  filter(EST_ST == "California")
+
+housing1b_fl <- housing1b %>%
+  filter(EST_ST == "Florida")
+
+housing1b_nv <- housing1b %>%
+  filter(EST_ST == "Nevada")
+
+housing1b_tx <- housing1b %>%
+  filter(EST_ST == "Texas")
+
+housing1b_co <- housing1b %>%
+  filter(EST_ST == "Colorado")
+
+## housing table for dt
+
+housing1a_dt <- housing1a %>%
+  rename(housing1a_overall_perc = overall_perc,
+         housing1a_hisp_perc = hisp_perc,
+         housing1a_white_perc = white_perc)
+housing1b_dt <- housing1b %>%
+  rename(housing1b_overall_perc = overall_perc,
+         housing1b_hisp_perc = hisp_perc,
+         housing1b_white_perc = white_perc) %>%
+  select(housing1b_overall_perc, housing1b_hisp_perc, housing1b_white_perc)
+
+housing_dt <- cbind(housing1a_dt, housing1b_dt)
+
+```
+
+```{r, anxiety, include=FALSE}
+# Mental Table 2a_b
+
+mental <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2a_b Experienced symptoms of anxiety OR depression more than half the days or nearly every day during the past 7 days.xlsx', sheet='Two_week_aggregate')
+mental$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+mental$weeks <- factor(mental$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+
+mental <- mental %>%
+  mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+         hisp_perc = round(Num_Hisp/Denom_Hisp*100,1),
+         white_perc = round(Num_NHW/Denom_NHW*100,1)) %>%
+  mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+         EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+         EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+         EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+         EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+         EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+  select(EST_ST, weeks, overall_perc, hisp_perc, white_perc)
+
+mental_us <- mental %>%
+  filter(EST_ST == "US")
+
+mental_az <- mental %>%
+  filter(EST_ST == "Arizona")
+
+mental_ca <- mental %>%
+  filter(EST_ST == "California")
+
+mental_fl <- mental %>%
+  filter(EST_ST == "Florida")
+
+mental_nv <- mental %>%
+  filter(EST_ST == "Nevada")
+
+mental_tx <- mental %>%
+  filter(EST_ST == "Texas")
+
+mental_co <- mental %>%
+  filter(EST_ST == "Colorado")
+```
+
+```{r, stimulus, include=FALSE}
+
+# stimulus <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1 Did not receive and do not expect to receive a stimulus payment.xlsx', sheet='Two_week_aggregate')
+# stimulus$weeks <- c("06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 10/14")
+# stimulus$weeks <- factor(stimulus$weeks, levels=c("06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 10/14"), ordered=TRUE)
+# 
+# stimulus <- stimulus %>%
+#   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
+#          hisp_perc = round(Num_Hisp/Denom_Hisp*100,1)) %>%
+#   mutate(EST_ST = replace(EST_ST, EST_ST == "04", "Arizona"),
+#          EST_ST = replace(EST_ST, EST_ST == "06", "California"),
+#          EST_ST = replace(EST_ST, EST_ST == "32", "Nevada"),
+#          EST_ST = replace(EST_ST, EST_ST == "12", "Florida"),
+#          EST_ST = replace(EST_ST, EST_ST == "48", "Texas"),
+#          EST_ST = replace(EST_ST, EST_ST == "08", "Colorado")) %>%
+#   select(EST_ST, weeks, overall_perc, hisp_perc) %>%
+#   filter(is.na(overall_perc)==FALSE)
+# 
+# stimulus_us <- stimulus %>%
+#   filter(EST_ST == "US")
+# 
+# stimulus_az <- stimulus %>%
+#   filter(EST_ST == "Arizona")
+# 
+# stimulus_ca <- stimulus %>%
+#   filter(EST_ST == "California")
+# 
+# stimulus_fl <- stimulus %>%
+#   filter(EST_ST == "Florida")
+# 
+# stimulus_nv <- stimulus %>%
+#   filter(EST_ST == "Nevada")
+# 
+# stimulus_tx <- stimulus %>%
+#   filter(EST_ST == "Texas")
+# 
+# stimulus_co <- stimulus %>%
+#   filter(EST_ST == "Colorado")
+```
+
+```{r, projections, include=FALSE}
+cases <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Projections_cases_deaths.xlsx', sheet="Cases2")
+
+cases$time <- c("Sep 2020", "Oct 2020", "Nov 2020", "Dec 2020", "Jan 2021", "Feb 2021", "Mar 2021", "Apr 2021", "May 2021", "June 2021", "July 2021", "Aug 2021", "Sep 2021", "Oct 2021", "Nov 2021", "Dec 2021")
+
+cases <- cases %>%
+  filter(time == "Sep 2020" | time == "Dec 2020" | time == "Mar 2021" | time == "June 2021" | time == "Sep 2021" | time == "Dec 2021")
+
+cases$time <- factor(cases$time, levels=c("Sep 2020", "Dec 2020", "Mar 2021", "June 2021", "Sep 2021", "Dec 2021"), ordered=TRUE)
+
+deaths <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Projections_cases_deaths.xlsx', sheet="Deaths2")
+deaths$time <- c("Sep 2020", "Oct 2020", "Nov 2020", "Dec 2020", "Jan 2021", "Feb 2021", "Mar 2021", "Apr 2021", "May 2021", "June 2021", "July 2021", "Aug 2021", "Sep 2021", "Oct 2021", "Nov 2021", "Dec 2021")
+
+deaths <- deaths %>%
+  filter(time == "Sep 2020" | time == "Dec 2020" | time == "Mar 2021" | time == "June 2021" | time == "Sep 2021" | time == "Dec 2021")
+
+deaths$time <- factor(deaths$time, levels=c("Sep 2020", "Dec 2020", "Mar 2021", "June 2021", "Sep 2021", "Dec 2021"), ordered=TRUE)
+
+```
+
+```{r, functions, include=FALSE}
+timeserieschart <- function(datasource, legend=TRUE, viztitle=" "){
+
+    xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero",
+                  ticksuffix = '%')
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+
+    overall_12 <- list(
+      xref = 'paper',
+      x = .95,
+      y = datasource$overall_perc[length(unique(datasource$weeks))],
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0(datasource$overall_perc[length(unique(datasource$weeks))], '%'),
+      font = list(family = 'Arial',
+                  size = 12,
+                  color = 'rgb(69,117,180)'),
+      showarrow = FALSE)
+    
+    hisp_12 <- list(
+      xref = 'paper',
+      x = .95,
+      y = datasource$hisp_perc[length(unique(datasource$weeks))],
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0(datasource$hisp_perc[length(unique(datasource$weeks))], '%'),
+      font = list(family = 'Arial',
+                  size = 12,
+                  color = 'rgb(228, 27, 35)'),
+      showarrow = FALSE)
+        
+    white_12 <- list(
+      xref = 'paper',
+      x = .95,
+      y = datasource$white_perc[length(unique(datasource$weeks))],
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0(datasource$white_perc[length(unique(datasource$weeks))], '%'),
+      font = list(family = 'Arial',
+                  size = 12,
+                  color = 'rgb(77,175,74)'),
+      showarrow = FALSE)
+    
+    vline <- function(x = 0, color = 'rgb(204, 204, 204)') {
+      list(
+        type = "line", 
+        y0 = .08, 
+        y1 = 1, 
+        yref = "paper",
+        x0 = x, 
+        x1 = x, 
+        line = list(color = color, opacity=.7, width=3, dash='dot'))
+    }
+    
+      event1 <- list(
+      xref = 'paper',
+      x = 0,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>April 24 <br> 50K deaths</i>"),
+      font = list(family = 'Arial',
+                  size = 10.5,
+                  color = "black"),
+                  showarrow = FALSE)
+      
+      event2 <- list(
+      xref = 'paper',
+      x = .20,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>May 28 <br> 100K deaths</i>"),
+      font = list(family = 'Arial',
+                  size = 10.5,
+                  color = "black"),
+                  showarrow = FALSE)
+            
+      event3 <- list(
+      xref = 'paper',
+      x = .55,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>July 31 <br> CARES relief expired</i>"),
+      font = list(family = 'Arial',
+                  size = 10.5,
+                  color = "black"),
+                  showarrow = FALSE)
+                  
+                  
+      event4 <- list(
+      xref = 'paper',
+      x = .89,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>Sept. 22 <br> 200K deaths</i>"),
+      font = list(family = 'Arial',
+                  size = 10.5,
+                  color = "black"),
+                  showarrow = FALSE)
+
+    fig <- plot_ly(datasource, x = ~weeks)
+    
+    fig <- fig %>% add_trace(y = ~overall_perc, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5), connectgaps=TRUE,
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'), name = 'Total',
+                             hovertemplate = paste0("Total: ", datasource$overall_perc, "%<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~hisp_perc, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5), connectgaps=TRUE,
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name="Hispanic/Latino", name = 'Hispanic/Latino',
+                             hovertemplate = paste0('Hispanic/Latino: ', datasource$hisp_perc, "%<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~white_perc, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(77,175,74)', width = 5), connectgaps=TRUE,
+                             line = list(color = 'rgb(77,175,74)', width = 2),
+                             name="Non-Hispanic White", name = 'Non-Hispanic White',
+                             hovertemplate = paste0('Non-Hispanic White: ', datasource$white_perc, "%<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = viztitle,
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      shapes = list(vline(0), vline(2), vline(6), vline(9)),
+                      showlegend=legend)
+    
+    fig <- fig %>% layout(annotations = hisp_12) 
+    fig <- fig %>% layout(annotations = white_12) 
+    fig <- fig %>% layout(annotations = event1)
+    fig <- fig %>% layout(annotations = event2) 
+    fig <- fig %>% layout(annotations = event3) 
+    fig <- fig %>% layout(annotations = event4)
+    
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    
+    fig
+}
+
+nationalchart <- function(datasource, title="", viztitle=" "){
+
+    xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero",
+                  ticksuffix = '%')
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+    vline <- function(x = 0, color = 'rgb(204, 204, 204)') {
+      list(
+        type = "line", 
+        y0 = .08, 
+        y1 = 1, 
+        yref = "paper",
+        x0 = x, 
+        x1 = x, 
+        line = list(color = color, opacity=.7, width=3, dash='dot'))
+    }
+    
+      event1 <- list(
+      xref = 'paper',
+      x = .02,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>April 24 <br> 50K deaths</i>"),
+      font = list(family = 'Arial',
+                  size = 10.5,
+                  color = "black"),
+                  showarrow = FALSE)
+      
+      event2 <- list(
+      xref = 'paper',
+      x = .22,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>May 28 <br> 100K deaths</i>"),
+      font = list(family = 'Arial',
+                  size = 10.5,
+                  color = "black"),
+                  showarrow = FALSE)
+            
+      event3 <- list(
+      xref = 'paper',
+      x = .60,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>July 31 <br> CARES relief expired</i>"),
+      font = list(family = 'Arial',
+                  size = 10.5,
+                  color = "black"),
+                  showarrow = FALSE)
+                  
+                  
+      event4 <- list(
+      xref = 'paper',
+      x = .92,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>Sept. 22 <br> 200K deaths</i>"),
+      font = list(family = 'Arial',
+                  size = 10.5,
+                  color = "black"),
+                  showarrow = FALSE)
+      
+      a <- list(
+        text = title,
+        # font = f,
+        xref = "paper",
+        yref = "paper",
+        yanchor = "bottom",
+        xanchor = "center",
+        align = "center",
+        x = 0.5,
+        y = 1,
+        showarrow = FALSE,
+        font = list(family = 'Arial',
+                  size = 16,
+                  color = "black"),
+                  showarrow = FALSE)
+      
+    fig <- plot_ly(datasource, x = ~weeks)
+    
+    fig <- fig %>% add_trace(y = ~overall_perc, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5), connectgaps=TRUE,
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'), name = 'Total',
+                             hovertemplate = paste0("Total: ", datasource$overall_perc, "%<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~hisp_perc, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5), connectgaps=TRUE,
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name="Hispanic/Latino",
+                             hovertemplate = paste0('Hispanic/Latino: ', datasource$hisp_perc, "%<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~white_perc, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(77,175,74)', width = 5), connectgaps=TRUE,
+                             line = list(color = 'rgb(77,175,74)', width = 2),
+                             name="Non-Hispanic White",
+                             hovertemplate = paste0('Non-Hispanic White: ', datasource$white_perc, "%<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~black_perc, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(152,78,163)', width = 5), connectgaps=TRUE,
+                             line = list(color = 'rgb(152,78,163)', width = 2),
+                             name="Non-Hispanic Black",
+                             hovertemplate = paste0('Non-Hispanic Black: ', datasource$black_perc, "%<extra></extra>")) 
+        
+    fig <- fig %>% add_trace(y = ~asian_perc, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(255,127,0)', width = 5), connectgaps=TRUE,
+                             line = list(color = 'rgb(255,127,05)', width = 2),
+                             name="Non-Hispanic Asian",
+                             hovertemplate = paste0('Non-Hispanic Asian: ', datasource$asian_perc, "%<extra></extra>")) 
+           
+    fig <- fig %>% add_trace(y = ~other_perc, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(255,255,51)', width = 5), connectgaps=TRUE,
+                             line = list(color = 'rgb(255,255,51)', width = 2),
+                             name="Non-Hispanic Other",
+                             hovertemplate = paste0('Non-Hispanic Other: ', datasource$other_perc, "%<extra></extra>")) 
+           
+        
+    fig <- fig %>% layout(title = viztitle,
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      shapes = list(vline(0), vline(2), vline(6), vline(9)),
+                      showlegend=legend)
+    
+    fig <- fig %>% layout(annotations = event1)
+    fig <- fig %>% layout(annotations = event2) 
+    fig <- fig %>% layout(annotations = event3) 
+    fig <- fig %>% layout(annotations = event4) 
+    fig <- fig %>% layout(annotations = a)
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    
+    
+    fig
+}
+
+buildadatatable <- function(data, columns=c("State", "Week", "Overall", "Hispanic/Latino", "Non-Hispanic White")) {
+datatable(data,
+          colnames=columns,
+          style="Bootstrap" , class = 'table-bordered table-condensed',
+          rownames=FALSE,
+          extensions = list('RowGroup' = NULL, 'Buttons' = NULL),
+          options = list(buttons = c('copy', 'excel', 'pdf', 'print'), dom = 'Btrp', pageLength=16, ordering=F, paging=T, rowGroup=list(dataSrc = 0),  initComplete = JS("function(settings, json) {$(this.api().table().header()).css({'font-size' : '14px'});}")),
+          caption = htmltools::tags$caption(
+    style = 'caption-side: bottom; text-align: left;',
+    'PRB analysis of data from the U.S. Census Bureau for UnidosUS, “By the Numbers: Latinos in the Time of Coronavirus."')) %>%
+    DT::formatStyle(columns = colnames(data), fontSize = '85%')
+}
+
+buildadatatable2 <- function(data, columns=c("State", "Week", "Overall", "Hispanic/Latino", "Non-Hispanic White")) {
+datatable(data,
+          colnames=columns,
+         # style="Bootstrap" , class = 'table-bordered table-condensed',
+          rownames=FALSE,
+         extensions = "Buttons",
+          options = list(dom = 'Brt', paging=FALSE, buttons = c('copy', 'excel', 'pdf', 'print'),  initComplete = JS("function(settings, json) {$(this.api().table().header()).css({'font-size' : '14px'});}")),
+          caption = htmltools::tags$caption(
+    style = 'caption-side: bottom; text-align: left;',
+    'PRB analysis of data from the U.S. Census Bureau for UnidosUS, “By the Numbers: Latinos in the Time of Coronavirus."')) %>%
+    DT::formatStyle(columns = colnames(data), fontSize = '85%')
+}
+
+```
+
+Home {data-navmenu="Home"}
+===================================
+
+Row
+------------------------------------------------------------------------
+
+### Home
+
+<center><h4>Welcome to</h4>
+
+<h2><strong>By the Numbers: Latinos in the Time of Coronavirus</strong></h2></center>
+<br>
+<strong>About the Dashboard</strong><br>
+Latino workers and families have been disproportionately impacted by the COVID-19 pandemic across nearly every aspect of their lives, which will have repercussions for years to come. To better understand the pandemic’s impact on Latino communities, UnidosUS presents “By the Numbers: Latinos in the Time of Coronavirus,” an interactive, user-friendly dashboard that provides the latest data on the effects of COVID-19 across a range of issues. We hope this data tool will help users better understand issues facing Latino communities in the time of COVID-19.
+
+The dashboard provides trends nationally and in six key states (Arizona, California, Florida, Nevada, Texas, and Colorado). Using data from the U.S. Census Bureau’s experimental Household Pulse Survey, the dashboard displays bi-weekly data with race/ethnicity comparisons for the following indicators:  
+
+<ul>
+<li>Loss of Employment Income</li>
+<li>Health Insurance Coverage (Overall/Public/Private)</li>
+<li>Food Insufficiency</li>
+<li>Mental Health (Anxiety)</li>
+<li>Housing (Missed Rent or Mortgage Payments)</li>
+<li>Education (Classes Cancelled or Moved to Distance Learning)</li>
+<li>Access to Technology for Children’s Education (Computers or Internet)</li>
+</ul>
+
+To better contextualize these trends, we include key dates in the timeline, in particular:
+
+<ul>
+<li>April 24, 2020: The United States surpasses 50,000 COVID-19 related deaths</li>
+<li>May 28, 2020: The United States surpasses 100,000 COVID-19 related deaths</li>
+<li>July 31, 2020: The economic relief measures in the CARES Act expire (supplemental unemployment insurance, rental assistance, etc.)</li>
+<li>September 22, 2020: The United States surpasses 200,000 COVID-19 related deaths</li>
+
+</ul>
+
+Additionally, the dashboard provides pandemic-related case and mortality projections to the end of 2021 for six states. These projections will be updated periodically as new data become available. For a description of high, middle, and low projection scenarios, see the Projection Methods tab above.
+<br>
+
+<strong>Using the Dashboard</strong><br>
+It is our hope that the data and graphs presented here will be used widely by advocates, journalists, policymakers, researchers, and others. Both the graphs and raw data can be downloaded in different formats for optimal use. 
+
+Click on the “Latest Trends” drop-down menu above to explore recent social and economic trends from the Household Pulse Survey. All graphs can be exported, and data can also be downloaded in Excel and PDF formats. We strongly recommend viewing the dashboard in full-screen format on a desktop computer monitor or laptop, rather than a mobile device.
+
+<div>
+![](C:/Users/mmartinez/Documents/Projects/Misc Projects/UNIDOS/Dashboard/screenshot.png)
+</div>
+
+Please note that the Household Pulse Data have been released in phases. Data collection for Phase 1 began on April 23, 2020 and ended on July 21, 2020; data collection for Phase 2 began on August 19, 2020 and is expected to run through October 31, 2020. The dashboard will be updated as new data become available.
+
+For more information about specific indicators from the Household Pulse Survey, please click on the “Notes and Definitions” link in the “Latest Trends” menu above.
+
+To view the COVID-19 projection methods and data, click on the “COVID-19 Projections” drop-down menu above.
+
+<strong>Credits</strong><br>
+This dashboard was developed by staff at the Population Reference Bureau (PRB). <strong>Matthew Martinez</strong> (Research Associate, PRB) developed the data visualizations. <strong>Lillian Kilduff</strong> (Research Analyst, PRB) and <strong>Mark Mather</strong> (Associate Vice President, PRB) compiled the data from the U.S. Census Bureau’s Household Pulse Survey. <strong>Beth Jarosz</strong> (Senior Research Associate, PRB) developed the projections of COVID-19 cases and deaths. Support was provided by <strong>Patricia Foxen</strong> (Deputy Director of Research) and <strong>Emily Ruskin</strong> (Senior Immigration Policy Analyst) at UnidosUS.
+
+<strong>Recommended Citation</strong><br>
+PRB analysis of data from the U.S. Census Bureau and the U.S. Centers for Disease Control and Prevention for UnidosUS, “By the Numbers: Latinos in the Time of Coronavirus.”
+
+<strong>Learn More About the Latino Community in the Time of Coronavirus</strong>
+<ul>
+<li><strong>Report:</strong> <a href="http://publications.unidosus.org/handle/123456789/2066" target="_blank">The Latino Community in the Time of Coronavirus: The Case for a Broad and Inclusive Government Response</a></li>
+<li><strong>Conversation:</strong> <a href="https://blog.unidosus.org/tag/covid-19-impact-on-latinos/" target="_blank">UnidosUS talks to Senator Catherine Cortez Masto and Representative Joaquin Castro on the Impact of COVID-19 on Latinos</a></li>
+<li><strong>Analysis: </strong><a href="https://blog.unidosus.org/2020/08/17/the-latino-community-in-the-time-of-coronavirus-government-response/" target="_blank">The Latino Community in the Time of Coronavirus: Still Waiting for a Government Response</a></li>
+<li><strong>Brief:</strong> <a href="http://publications.unidosus.org/handle/123456789/2087" target="_blank">Struggling to Stay Home: Latino Renters in the COVID-19 Pandemic</a></li>
+<li><strong>Townhall:</strong> <a href="https://www.unidosus.org/campaigns/coronavirus-covid-19/webinars/COVID-19-%E2%80%93-What-is-Happening-to-Latino-Renters?" target="_blank">UnidosUS in Conversation with Representative Jesús G. "Chuy" García and UnidosUS Affiliate MEDA, moderated by the creators of Netflix’s “Gentefied”</a></li>
+<li><a href="https://www.unidosus.org/campaigns/coronavirus-covid-19/video/unidosus-virtual-events" target="_blank">More virtual events in Spanish and English</a></li>
+<li><a href="https://www.unidosus.org/issues/health/articles/coronavirus-eng" target="_blank">COVID-19 resources in Spanish and English</a></li>
+</ul>
+
+Notes and Definitions {data-navmenu="Latest Trends"}
+===================================
+
+Row
+------------------------------------------------------------------------
+
+### Data Sources
+
+<center><h4>Notes and Definitions</h4></center>
+
+Data on recent social and economic trends are based on PRB’s analysis of the U.S. Census Bureau’s 2020 Household Pulse Survey Public Use Files.
+
+Household Pulse Survey data were compiled between April and October 2020, but there was a gap in data collection between July 21 and August 19. Denominators for all Household Pulse Survey indicators in the dashboard exclude respondents who did not provide valid responses.
+
+These estimates are subject to both sampling and nonsampling error. Data are presented as two-week averages (weeks 1-2, weeks 3-4, etc.) to reduce sampling error, which may be substantial for certain states and population subgroups.
+
+The Census Bureau is fielding the Household Pulse Survey as a part of the agency’s Experimental Data Series; as such, these data may not meet some of the Census Bureau’s statistical quality standards. The Household Pulse Survey only includes respondents who are willing and able to respond to an online survey and may yield biased estimates, particularly for items related to computer and internet access.
+
+Data are presented for the nation and six states: Arizona, California, Colorado, Florida, Nevada, and Texas. These states represent the largest and fastest growing Hispanic populations in the United States. More than half of the nation’s Latino population lives in California, Texas and Florida alone.
+
+State-level estimates are shown for the Hispanic/Latino, non-Hispanic White, and total population, while national estimates are shown for the total population and five racial/ethnic groups:
+<ul>
+<li>Hispanic/Latino</li>
+<li>Non-Hispanic White (alone)</li>
+<li>Non-Hispanic Black (alone)</li>
+<li>Non-Hispanic Asian (alone)</li>
+<li>Non-Hispanic Other Race (alone) or Two or More Races</li>
+</ul>
+
+<p>The terms “Hispanic” and “Latino” are used interchangeably by the Census Bureau and in this data tool to refer to persons of Mexican, Puerto Rican, Cuban, Central and South American, Dominican, Spanish, and other Hispanic descent; they may be of any race. This data tool may also refer to this population as “Latinx” to represent the diversity of gender identities and expressions that are present in the community.
+
+<strong>Variable Definitions</strong>
+<ul>
+<li><strong>Adults with Employment Income Loss:</strong> The share of adults ages 18 and older who reported that they or someone in their household had experienced a loss of employment income since March 13, 2020.</li><br>
+<li><strong>Households That Do Not Have Enough Food to Eat:</strong> The share of adults ages 18 and older who reported that their household sometimes or often did not have enough food to eat in the past seven days.</li><br>
+<li><strong>Households with Children That Do Not Have Enough Food to Eat:</strong> The share of adults ages 18 and older in households with children under age 18 who reported that their household sometimes or often did not have enough food to eat in the past seven days.</li><br>
+<li><strong>Adults Who Lack Health Insurance:</strong> The share of adults ages 18 to 64 who reported that they currently do not have health insurance. Adults were classified as uninsured if they did not report any private health insurance coverage or public health plan coverage at the time of the interview. Following Census Bureau and CDC guidelines, adults were also classified as uninsured if they had only Indian Health Service coverage.</li><br>
+<li><strong>Adults with Public Health Insurance Coverage:</strong> The share of adults ages 18 to 64 who reported that they had 1) Medicare, 2) Medicaid, or 3) VA health care. (Note: The private and public categories are not mutually exclusive; adults can be enrolled in both.)</li><br>
+<li><strong>Adults with Private Health Insurance Coverage:</strong> The share of adults ages 18 to 64 who reported that they had insurance through 1) a current or former employer or union; 2) insurance purchased directly from an insurance company, including marketplace coverage; or 3) TRICARE or other military health care. (Note: The private and public categories are not mutually exclusive; adults can be enrolled in both.)</li><br>
+<li><strong>Households with Children Who Had Class Cancelled:</strong> The share of adults ages 18 and older living in households with at least one child attending public or private school (kindergarten through 12th grade) who had classes cancelled because of COVID-19.</li><br>
+<li><strong>Households with Children Whose Classes Moved to an Online Format:</strong> The share of adults ages 18 and older living in households with at least one child attending public or private school (K-12) whose classes were moved to a distance-learning format using online resources, either self-paced or in real time, because of COVID-19.</li><br>
+<li><strong>Households without a Computer Available to Children for Educational Purposes:</strong> The share of adults ages 18 and older living in households with at least one child attending public or private school (K-12) in which a computer or digital device is rarely or never available to children for educational purposes.</li><br>
+<li><strong>Households without Internet Available to Children for Educational Purposes:</strong> The share of adults ages 18 and older living in households with at least one child attending public or private school (K-12) in which internet is rarely or never available to children for educational purposes. (Note: The Household Pulse Survey does not distinguish between broadband and other kinds of internet access.)</li><br>
+<li><strong>Adults in Households That Missed Last Month’s Mortgage Payment:</strong> The share of adults ages 18 and older living in owner-occupied households that missed the previous month’s mortgage payment. (Note: Data are restricted to owner-occupied households that have a monthly mortgage payment and exclude households with mortgage payments that were deferred. Data for July 21 and earlier periods reflect households that did not pay last month’s mortgage on time, while data for August 19 and later periods reflect households that are not “currently caught up on mortgage payments.”)</li><br>
+<li><strong>Adults in Households That Missed Last Month’s Rent Payment:</strong> The share of adults ages 18 and older living in renter-occupied households that missed the previous month’s rent payment. (Note: Data are restricted to renter-occupied households that have a monthly rent payment and exclude households with rent payments that were deferred. Data for July 21 and earlier periods reflect households that did not pay last month’s rent on time, while data for August 19 and later periods reflect households that are not “currently caught up on rent payments.”)</li><br>
+<li><strong>Adults Who Felt Anxious for More Than Half of the Days in the Past Week:</strong> The share of adults ages 18 and older who reported that they felt nervous, anxious or on edge for more than half of the days or nearly every day in the past seven days.</li>
+</ul>
+
+Projection Methods {data-navmenu="COVID-19 Projections"}
+===================================
+
+Row
+------------------------------------------------------------------------
+
+### Projection Methods
+
+<center><h4>Methods Used to Project COVID-19 Cases and Deaths</h4></center>
+
+<strong>Overview</strong><br>
+Projections are based on the Population Reference Bureau (PRB)’s analysis of data from the U.S. Centers for Disease Control and Prevention (CDC) and other sources. To project the potential number of COVID-19 cases and deaths that could occur in coming months, we first analyzed trends in confirmed cases and deaths for the population as a whole, as well as for the Hispanic/Latino population.
+
+Starting with data available through September 2020, we applied three scenarios:
+
+<ul>
+<li><strong>Low: Masking and Other Measures Limit Spread</strong><br>
+This scenario assumes a relatively low rate of community spread.</li>
+<li><strong>Middle: Mixed Success at Limiting Spread</strong><br>
+This scenario is the midpoint between the low and high scenarios.</li>
+<li><strong>High: Few Preventive Measures, Widespread Transmission</strong><br>
+This scenario assumes few, or ineffective, preventive measures and rapid growth in the number of new cases.</li>
+</ul>
+
+Each of these scenarios results in a projected total number of COVID-19 cases for each state.
+We then use the projected total number of cases to estimate the total number of COVID-19 deaths, by assuming that a certain share of newly infected people succumb to the disease. This rate—deaths as a proportion of new cases—is based on data available for August and September 2020.
+
+Next, we calculated the projected number of Hispanic/Latino cases and deaths as a share of the total number of cases and deaths in each state. The share is based on data available for August and September 2020.
+
+Projections are provided for six states: Arizona, California, Colorado, Florida, Nevada, and Texas. These states represent the largest and fastest growing Hispanic populations in the United States. More than half of the nation’s Latino population lives in California, Texas and Florida alone.
+<br>
+ 
+<strong>Data Sources</strong><br>
+Input data sources include the following:
+<ul>
+<li>U.S. Centers for Disease Control and Prevention</li>
+<li>The COVID Tracking Project</li>
+<li>Kaiser Family Foundation</li>
+<li>State departments of health for Arizona, California, Colorado, Florida, Nevada, and Texas</li>
+<li>Institute of Health Metrics and Evaluation, University of Washington</li>
+</ul>
+
+<strong>Detailed Methods</strong><br>
+Starting with data available through September 2020, we apply a series of growth rates (per month, per state) over the projection period. The scenarios are as follows:
+
+<ul>
+<li><strong>Low: Masking and Other Measures Limit Spread</strong><br>
+This scenario assumes a relatively low rate of community spread. The monthly growth rate in cases ranges from 8% to 20% (depending on the state) through December 2020 and tapers off to 5% by February 2020. Once a state reaches 5.2% of the population with a positive case, the growth rate drops to 1% per month. (See description below.)</li><br>
+<li><strong>Middle: Mixed Success at Limiting Spread</strong><br>
+This scenario shows a rate of growth that is the midpoint between the low and high scenarios.</li><br>
+<li><strong>High: Few Preventive Measures, Widespread Transmission</strong><br>
+This scenario assumes few, or ineffective, preventive measures and widespread community transmission. The monthly growth rate in cases ranges from 14% to 37% (depending on the state) through December 2020 and tapers off to 5% by March 2020.</li>
+</ul>
+
+From the existing case level, we use recent growth rates in cases to project the change in cases expected in the next month. We then add these new cases to the prior-month total. To project the first month of growth in number of cases, we benchmark state growth rates to the “ensemble model” four-week projection from the <a href="https://www.cdc.gov/coronavirus/2019-ncov/covid-data/forecasting-us.html" target="_blank">U.S. Centers for Disease Control and Prevention</a> (CDC) for the week ending October 31, 2020. The low scenario incorporates the growth in cases from CDC’s 25th percentile ensemble projection. The middle scenario incorporates the growth in cases from CDC’s ensemble point projection. The high scenario incorporates growth in cases from the 75th percentile ensemble projection.
+
+For the three-month time horizon, we benchmark state growth rates to the low/universal masking and high/mandates easing scenarios from the <a href="https://covid19.healthdata.org/united-states-of-america?view=total-deaths&tab=trend" target="_blank">Institute for Health Metrics and Evaluation at the University of Washington</a>.
+
+From March 2021 to the end of the projection horizon, we show the rate of growth in new cases tapering off, with monthly increases of 5% until a state begins to approach “herd immunity,” at which point growth rates decrease to 1% per month. Herd immunity varies by scenario. In the low scenario, the threshold is 52% of the population infected and recovered, and in the high scenario the threshold is 75%.<sup>1</sup> Because the data available reflect the number of confirmed cases, rather than total number of infections, we must make an assumption about the level of under-reporting of cases relative to infections. While the exact under-reporting level is unknown, and likely varies by location, this model assumes that about 1 in 10 infections is recorded as a confirmed case—or that there are about 10 times more infections than there are confirmed cases. Thus, the model assumes “herd immunity” when the case/population thresholds are 5.2% and 7.5%, for the low and high scenarios, respectively.<sup>2</sup>
+
+Each of these scenarios results in a projected total number of COVID-19 cases for each state. The projected total number of cases then influences the projected total number of COVID-19 deaths, as a share of newly infected people succumb to the disease.
+
+<strong>From Projected Total Cases to Projected Deaths</strong><br>
+To project the number of deaths, we begin with the number of new cases and apply a ratio based on the historical number of deaths relative to new cases. Because these projections are based on monthly data, and the population at risk of death may span cases from both the current month and the prior month, we apply the transition rate to half of the new cases from the prior month and half of the new cases from the current month to develop an estimate of deaths in a given month.<sup>3</sup> Although the transition rates have declined slightly since the pandemic began, the rates have started to stabilize in recent months. Thus, we hold the transition rates constant—at the lower of their August or September levels—through the projection period. The transition rates are constant across all three projection scenarios.
+
+<strong>Projecting COVID-19 Cases and Deaths for the Hispanic/Latino Population</strong><br>
+Historical data on cases and deaths in the Hispanic/Latino population are from <a href="https://covidtracking.com/race" target="_blank">The COVID Racial Data Tracker</a> from the COVID Tracking Project at The Atlantic. A substantial share of cases reported from Texas are missing racial/ethnic data. Historical Hispanic/Latino cases in Texas are estimated using total cases and the Hispanic/Latino share of cases with known race/ethnicity.
+
+For each state and scenario, the number of projected Hispanic/Latino cases and deaths is a constant share of the total number of cases and deaths. The shares are calculated based on an average of data from recent months, with data drawn from two key sources: the <a href="https://covidtracking.com/race" target="_blank">COVID Tracking Project</a> (which reports cases and deaths with known race/ethnicity) and the <a href="https://www.kff.org/other/state-indicator/covid-19-cases-by-race-ethnicity/" target="_blank">Kaiser Family Foundation cases by race/ethnicity</a> and <a href="https://www.kff.org/other/state-indicator/covid-19-deaths-by-race-ethnicity/?currentTimeframe=0&sortModel=%7B%22colId%22:%22Location%22,%22sort%22:%22asc%22%7D" target="_blank">deaths by race/ethnicity</a> (which reports shares by race/ethnicity among cases/deaths for which race/ethnicity is known).<sup>4</sup>  The Hispanic/Latino share is held constant across all three projection scenarios.</p>
+
+<hr>
+1. The herd immunity thresholds are based on the herd immunity formula 1-1/R<sub>0</sub>. While data are still limited, and R<sub>0</sub> is not known exactly, there is increasing evidence that the R<sub>0</sub> for the SARS-CoV-2 virus ranges from 2.5-4.0, and that masking reduces R<sub>0</sub> by about 70% to 2.1. For additional information, see John Drake, “Face Masks Could Prevent 50 Million Covid-19 Cases In The US,” Forbes, October 9, 2020, <a href="https://bit.ly/3nPnVCv" target="_blank">https://bit.ly/3nPnVCv</a>; and Arnaud Fontanet and Simon Cauchemez, “COVID-19 Herd Immunity: Where Are We?” <i>Nature Reviews Immunology</i>, September 2020, <a href="https://go.nature.com/318dxMf" target="_blank">https://go.nature.com/318dxMf</a>. 
+
+2. Considering the low rate of testing in the United States, there is evidence that COVID-19 infections are under-reported by a factor of about 10. Thus, our threshold for nearly population-wide infection is approximately 10% of the population with a confirmed case.
+
+3. Several analyses suggest that median time from symptom onset to death is in the two-week range. For additional information, see H. Lau et al., “Evaluating the Massive Underreporting and Undertesting of COVID-19 cases in Multiple Global Epicenters,” <i>Pulmonology</i>, June 2020, <a href="https://bit.ly/3iZCWxN" target="_blank">https://bit.ly/3iZCWxN</a>; and U.S. Centers for Disease Control and Prevention, “COVID-19 Pandemic Planning Scenarios,” September 2020, <a href="https://bit.ly/2IsAIdL" target="_blank">https://bit.ly/2IsAIdL</a>. 
+
+4. For the percent of total cases that are Hispanic/Latino, we average data from August-September 2020. For percent of deaths that are Hispanic/Latino, we average data from July-September 2020. We use a shorter period for case demographics because of concerns about the quality of race/ethnicity coding on case reports earlier in the year.
+
+
+Loss of Employment Income {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+
+### United States
+```{r, income US}
+a <- list(
+  text = "Adults with Employment Income Loss",
+  # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+
+timeserieschart(income_us) %>% layout(annotations=a)
+```
+
+### Arizona
+```{r, income AZ}
+timeserieschart(income_az) %>% layout(annotations=a)
+```
+
+### California
+```{r, income CA}
+timeserieschart(income_ca) %>% layout(annotations=a)
+```
+
+### Colorado
+```{r, income CO}
+timeserieschart(income_co) %>% layout(annotations=a)
+```
+
+### Florida
+```{r, income FL}
+timeserieschart(income_fl) %>% layout(annotations=a)
+```
+
+### Nevada
+```{r, income NV}
+timeserieschart(income_nv) %>% layout(annotations=a)
+```
+
+### Texas
+```{r, income TX}
+timeserieschart(income_tx) %>% layout(annotations=a)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Adults with Employment Income Loss</h4>
+<h6>The share of adults ages 18 and older who reported that they or someone in their household had experienced a loss of employment income since March 13, 2020.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(income, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+```
+
+
+Food Insufficiency - All Households {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, Food Table 2b US}
+a <- list(
+  text = "Households That Do Not Have Enough Food to Eat",
+  # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+    
+b <- list(
+  text = "Households with Children That Do Not Have Enough Food to Eat",
+ # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+
+timeserieschart(food2b_us) %>% layout(annotations=a)
+```
+
+### Arizona
+```{r, Food Table 2b AZ}
+timeserieschart(food2b_az) %>% layout(annotations=a)
+```
+
+### California
+```{r, Food Table 2b CA}
+timeserieschart(food2b_ca) %>% layout(annotations=a)
+```
+
+### Colorado
+```{r, Food Table 2b CO}
+timeserieschart(food2b_co) %>% layout(annotations=a)
+```
+
+### Florida
+```{r, Food Table 2b FL}
+timeserieschart(food2b_fl) %>% layout(annotations=a)
+```
+
+### Nevada
+```{r, Food Table 2b NV}
+timeserieschart(food2b_nv) %>% layout(annotations=a)
+```
+
+### Texas
+```{r, Food Table 2b TX}
+timeserieschart(food2b_tx) %>% layout(annotations=a)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Households That Do Not Have Enough Food to Eat</h4>
+<h6>The share of adults ages 18 and older who reported that their household sometimes or often did not have enough food to eat in the past seven days.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(food2b, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+```
+
+Food Insufficiency - Households with Children {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, Food Table 3b US}
+a <- list(
+  text = "Households with Children That Do Not Have Enough Food to Eat",
+ # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+
+timeserieschart(food3b_us) %>% layout(annotations=a)
+```
+
+### Arizona
+```{r, Food Table 3b AZ}
+timeserieschart(food3b_az) %>% layout(annotations=a)
+```
+
+### California
+```{r, Food Table 3b CA}
+timeserieschart(food3b_ca) %>% layout(annotations=a)
+```
+
+### Colorado
+```{r, Food Table 3b CO}
+timeserieschart(food3b_co) %>% layout(annotations=a)
+```
+
+### Florida
+```{r, Food Table 3b FL}
+timeserieschart(food3b_fl) %>% layout(annotations=a)
+```
+
+### Nevada
+```{r, Food Table 3b NV}
+timeserieschart(food3b_nv) %>% layout(annotations=a)
+```
+
+### Texas
+```{r, Food Table 3b TX}
+timeserieschart(food3b_tx) %>% layout(annotations=a)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Households with Children That Do Not Have Enough Food to Eat</h4>
+<h6>The share of adults ages 18 and older in households with children under age 18 who reported that their household sometimes or often did not have enough food to eat in the past seven days.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(food3b, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+```
+
+
+Lacking Health Insurance {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, No Health Table 3 us}
+a <- list(
+  text = "Adults Who Lack Health Insurance",
+  # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+
+timeserieschart(health3_us) %>% layout(annotations=a)
+```
+
+### Arizona
+```{r, No Health Table 3 az}
+timeserieschart(health3_az) %>% layout(annotations=a)
+```
+
+### California
+```{r, No Health Table 3 ca}
+timeserieschart(health3_ca) %>% layout(annotations=a)
+```
+
+### Colorado
+```{r, No Health Table 3 co}
+timeserieschart(health3_co) %>% layout(annotations=a)
+```
+
+### Florida
+```{r, No Health Table 3 fl}
+timeserieschart(health3_fl) %>% layout(annotations=a)
+```
+
+### Nevada
+```{r, No Health Table 3 nv}
+timeserieschart(health3_nv) %>% layout(annotations=a)
+```
+
+### Texas
+```{r, No Health Table 3 tx}
+timeserieschart(health3_tx) %>% layout(annotations=a)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Adults Who Lack Health Insurance</h4>
+<h6>The share of adults ages 18 to 64 who reported that they currently do not have health insurance. Adults were classified as uninsured if they did not report any private health insurance coverage or public health plan coverage at the time of the interview. Following Census Bureau and CDC guidelines, adults were also classified as uninsured if they had only Indian Health Service coverage.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(health3, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+```
+
+Private Health Insurance {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, Health Table 4 us}
+a <- list(
+  text = "Adults with Private Health Insurance Coverage",
+  # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+    
+timeserieschart(health4_us) %>% layout(annotations=a)
+```
+
+### Arizona
+```{r, Health Table 4 az}
+timeserieschart(health4_az) %>% layout(annotations=a)
+```
+
+### California
+```{r, Health Table 4 ca}
+timeserieschart(health4_ca) %>% layout(annotations=a)
+```
+
+### Colorado
+```{r, Health Table 4 co}
+timeserieschart(health4_co) %>% layout(annotations=a)
+```
+
+### Florida
+```{r, Health Table 4 fl}
+timeserieschart(health4_fl) %>% layout(annotations=a)
+```
+
+### Nevada
+```{r, Health Table 4 nv}
+timeserieschart(health4_nv) %>% layout(annotations=a)
+```
+
+### Texas
+```{r, Health Table 4 tx}
+timeserieschart(health4_tx) %>% layout(annotations=a)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Adults with Private Health Insurance Coverage</h4>
+<h6>The share of adults ages 18 to 64 who reported that they had insurance through 1) a current or former employer or union; 2) insurance purchased directly from an insurance company, including marketplace coverage; or 3) TRICARE or other military health care. (Note: The private and public categories are not mutually exclusive; adults can be enrolled in both.)</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(health4, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+```
+
+Public Health Insurance {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, Health Table 3_2 us}
+b <- list(
+  text = "Adults with Public Health Insurance Coverage",
+ # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+
+timeserieschart(health3_2_us) %>% layout(annotations=b)
+```
+
+### Arizona
+```{r, Health Table 3_2 az}
+timeserieschart(health3_2_az) %>% layout(annotations=b)
+```
+
+### California
+```{r, Health Table 3_2 ca}
+timeserieschart(health3_2_ca) %>% layout(annotations=b)
+```
+
+### Colorado
+```{r, Health Table 3_2 co}
+timeserieschart(health3_2_co) %>% layout(annotations=b)
+```
+
+### Florida
+```{r, Health Table 3_2 fl}
+timeserieschart(health3_2_fl) %>% layout(annotations=b)
+```
+
+### Nevada
+```{r, Health Table 3_2 nv}
+timeserieschart(health3_2_nv) %>% layout(annotations=b)
+```
+
+### Texas
+```{r, Health Table 3_2 tx}
+timeserieschart(health3_2_tx) %>% layout(annotations=b)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Adults with Public Health Insurance Coverage</h4>
+<h6>The share of adults ages 18 to 64 who reported that they had 1) Medicare, 2) Medicaid, or 3) VA health care. (Note: The private and public categories are not mutually exclusive; adults can be enrolled in both.)</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(health3_2, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+```
+
+Education - Classes Cancelled {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, Education Table 2 us}
+a <- list(
+  text = "Households with Children Who Had Class Cancelled",
+  # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+
+timeserieschart(education2_us) %>% layout(annotations=a)
+```
+
+### Arizona
+```{r, Education Table 2 az}
+timeserieschart(education2_az) %>% layout(annotations=a)
+```
+
+### California
+```{r, Education Table 2 ca}
+timeserieschart(education2_ca) %>% layout(annotations=a)
+```
+
+### Colorado
+```{r, Education Table 2 co}
+timeserieschart(education2_co) %>% layout(annotations=a)
+```
+
+### Florida
+```{r, Education Table 2 fl}
+timeserieschart(education2_fl) %>% layout(annotations=a)
+```
+
+### Nevada
+```{r, Education Table 2 nv}
+timeserieschart(education2_nv) %>% layout(annotations=a)
+```
+
+### Texas
+```{r, Education Table 2 tx}
+timeserieschart(education2_tx) %>% layout(annotations=a)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Households with Children Who Had Class Cancelled</h4>
+<h6>The share of adults ages 18 and older living in households with at least one child attending public or private school (kindergarten through 12th grade) who had classes cancelled because of COVID-19.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(education2, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+```
+
+
+Education - Classes Moved Online {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, Education2_2 Table 2 us}
+b <- list(
+  text = "Households with Children Whose Classes Moved to an Online Format",
+ # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+
+timeserieschart(education2_2_us) %>% layout(annotations=b)
+```
+
+### Arizona
+```{r, Education2_2 Table 2 az}
+timeserieschart(education2_2_az) %>% layout(annotations=b)
+```
+
+### California
+```{r, Education2_2 Table 2 ca}
+timeserieschart(education2_2_ca) %>% layout(annotations=b)
+```
+
+### Colorado
+```{r, Education2_2 Table 2 co}
+timeserieschart(education2_2_co) %>% layout(annotations=b)
+```
+
+### Florida
+```{r, Education2_2 Table 2 fl}
+timeserieschart(education2_2_fl) %>% layout(annotations=b)
+```
+
+### Nevada
+```{r, Education2_2 Table 2 nv}
+timeserieschart(education2_2_nv) %>% layout(annotations=b)
+```
+
+### Texas
+```{r, Education2_2 Table 2 tx}
+timeserieschart(education2_2_tx) %>% layout(annotations=b)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Households with Children Whose Classes Moved to an Online Format</h4>
+<h6>The share of adults ages 18 and older living in households with at least one child attending public or private school (K-12) whose classes were moved to a distance-learning format using online resources, either self-paced or in real time, because of COVID-19.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(education2_2, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+```
+
+
+
+Education - Computer Availability {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, Education Table 3 us}
+a <- list(
+  text = "Households without a Computer Available to Children for Educational Purposes",
+  # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+    
+timeserieschart(education3_us) %>% layout(annotations=a)
+```
+
+### Arizona
+```{r, Education Table 3 az}
+timeserieschart(education3_az) %>% layout(annotations=a)
+```
+
+### California
+```{r, Education Table 3 ca}
+timeserieschart(education3_ca) %>% layout(annotations=a)
+```
+
+### Colorado
+```{r, Education Table 3 co}
+timeserieschart(education3_co) %>% layout(annotations=a)
+```
+
+### Florida
+```{r, Education Table 3 fl}
+timeserieschart(education3_fl) %>% layout(annotations=a)
+```
+
+### Nevada
+```{r, Education Table 3 nv}
+timeserieschart(education3_nv) %>% layout(annotations=a)
+```
+
+### Texas
+```{r, Education Table 3 tx}
+timeserieschart(education3_tx) %>% layout(annotations=a)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Households without a Computer Available to Children for Educational Purposes</h4>
+<h6>The share of adults ages 18 and older living in households with at least one child attending public or private school (K-12) in which a computer or digital device is rarely or never available to children for educational purposes.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(education3, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+
+```
+
+Education - Internet Availability {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, Education3_2 Table 3 us}
+b <- list(
+  text = "Households without Internet Available to Children for Educational Purposes",
+ # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+
+timeserieschart(education3_2_us) %>% layout(annotations=b)
+```
+
+### Arizona
+```{r, Education3_2 Table 3 az}
+timeserieschart(education3_2_az) %>% layout(annotations=b)
+```
+
+### California
+```{r, Education3_2 Table 3 ca}
+timeserieschart(education3_2_ca) %>% layout(annotations=b)
+```
+
+### Colorado
+```{r, Education3_2 Table 3 co}
+timeserieschart(education3_2_co) %>% layout(annotations=b)
+```
+
+### Florida
+```{r, Education3_2 Table 3 fl}
+timeserieschart(education3_2_fl) %>% layout(annotations=b)
+```
+
+### Nevada
+```{r, Education3_2 Table 3 nv}
+timeserieschart(education3_2_nv) %>% layout(annotations=b)
+```
+
+### Texas
+```{r, Education3_2 Table 3 tx}
+timeserieschart(education3_2_tx) %>% layout(annotations=b)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Households without Internet Available to Children for Educational Purposes</h4>
+<h6>The share of adults ages 18 and older living in households with at least one child attending public or private school (K-12) in which internet is rarely or never available to children for educational purposes. (Note: The Household Pulse Survey does not distinguish between broadband and other kinds of internet access.)</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(education3_2, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+
+```
+
+Housing - Missed Mortgage Payment {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, housing us table 1a}
+a <- list(
+  text = "Adults in Households That Missed Last Month’s Mortgage Payment",
+  # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+
+timeserieschart(housing1a_us) %>% layout(annotations=a)
+
+```
+
+### Arizona
+```{r, housing az table 1a}
+timeserieschart(housing1a_az) %>% layout(annotations=a)
+```
+
+### California
+```{r, housing ca table 1a}
+timeserieschart(housing1a_ca) %>% layout(annotations=a)
+```
+
+### Colorado
+```{r, housing co table 1a}
+timeserieschart(housing1a_co) %>% layout(annotations=a)
+```
+
+### Florida
+```{r, housing fl table 1a}
+timeserieschart(housing1a_fl) %>% layout(annotations=a)
+```
+
+### Nevada
+```{r, housing nv table 1a}
+timeserieschart(housing1a_nv) %>% layout(annotations=a)
+```
+
+### Texas
+```{r, housing tx table 1a}
+timeserieschart(housing1a_tx) %>% layout(annotations=a)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Adults in Households That Missed Last Month’s Mortgage</h4>
+<h6>The share of adults ages 18 and older living in owner-occupied households that missed the previous month’s mortgage payment. (Note: Data are restricted to owner-occupied households that have a monthly mortgage payment and exclude households with mortgage payments that were deferred. Data for July 21 and earlier periods reflect households that did not pay last month’s mortgage on time, while data for August 19 and later periods reflect households that are not “currently caught up on mortgage payments.”)</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(housing1a, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+```
+
+Housing - Missed Rent Payment {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, housing us table 1b}
+b <- list(
+  text = "Adults in Households That Missed Last Month’s Rent Payment",
+ # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = 1,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+
+timeserieschart(housing1b_us) %>% layout(annotations=b)
+
+```
+
+### Arizona
+```{r, housing az table 1b}
+timeserieschart(housing1b_az) %>% layout(annotations=b)
+```
+
+### California
+```{r, housing ca table 1b}
+timeserieschart(housing1b_ca) %>% layout(annotations=b)
+```
+
+### Colorado
+```{r, housing co table 1b}
+timeserieschart(housing1b_co) %>% layout(annotations=b)
+```
+
+### Florida
+```{r, housing fl table 1b}
+timeserieschart(housing1b_fl) %>% layout(annotations=b)
+```
+
+### Nevada
+```{r, housing nv table 1b}
+timeserieschart(housing1b_nv) %>% layout(annotations=b)
+```
+
+### Texas
+```{r, housing tx table 1b}
+timeserieschart(housing1b_tx) %>% layout(annotations=b)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Adults in Households That Missed Last Month’s Rent Payment</h4>
+<h6>The share of adults ages 18 and older living in renter-occupied households that missed the previous month’s rent payment. (Note: Data are restricted to renter-occupied households that have a monthly rent payment and exclude households with rent payments that were deferred. Data for July 21 and earlier periods reflect households that did not pay last month’s rent on time, while data for August 19 and later periods reflect households that are not “currently caught up on rent payments.”)</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(housing1b, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+```
+
+Mental Health (Anxiety) {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### United States
+```{r, mental us}
+a <- list(
+  text = "Adults Who Felt Anxious for More Than Half of the Days in the Past Week",
+  # font = f,
+  xref = "paper",
+  yref = "paper",
+  yanchor = "bottom",
+  xanchor = "center",
+  align = "center",
+  x = 0.5,
+  y = .97,
+  showarrow = FALSE,
+  font = list(family = 'Arial',
+            size = 16,
+            color = "black"),
+            showarrow = FALSE)
+
+timeserieschart(mental_us) %>% layout(annotations=a)
+```
+
+### Arizona
+```{r, mental az}
+timeserieschart(mental_az) %>% layout(annotations=a)
+```
+
+### California
+```{r, mental ca}
+timeserieschart(mental_ca) %>% layout(annotations=a)
+```
+
+### Colorado
+```{r, mental co}
+timeserieschart(mental_co) %>% layout(annotations=a)
+```
+
+### Florida
+```{r, mental fl}
+timeserieschart(mental_fl) %>% layout(annotations=a)
+```
+
+### Nevada
+```{r, mental nv}
+timeserieschart(mental_nv) %>% layout(annotations=a)
+```
+
+### Texas
+```{r, mental tx}
+timeserieschart(mental_tx) %>% layout(annotations=a)
+```
+
+Column {data-width=360}
+-----------------------------------------------------------------------
+
+###
+
+<h4>Adults Who Felt Anxious for More Than Half of the Days in the Past Week</h4>
+<h6>The share of adults ages 18 and older who reported that they felt nervous, anxious or on edge for more than half of the days or nearly every day in the past seven days.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+
+```{r}
+buildadatatable(mental, c("State", "Week", "Total", "Hispanic/Latino", "Non-Hispanic White"))
+```
+
+
+National Overview {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+
+### Loss of Income
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national income}
+nationalchart(national_income, title="Adults with Employment Income Loss")
+```
+
+### Missed Rent
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national missed rent}
+nationalchart(national_rent, title="Adults in Households That Missed Last Month’s Rent Payment")
+```
+
+### Missed Mortgage
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national mortgage}
+nationalchart(national_mortgage, title="Adults in Households That Missed Last Month’s Mortgage Payment")
+```
+
+### Classes Cancelled
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national classes cancelled}
+nationalchart(national_cancelled, title="Households with Children Who Had Class Cancelled")
+```
+
+### Distance Learning
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national distance learning}
+nationalchart(national_distance, title="Households with Children Whose Classes Moved to an Online Format")
+```
+
+### Food Insufficiency (Total)
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national Food Insufficiency General}
+nationalchart(national_food, title="Households That Do Not Have Enough Food to Eat")
+```
+
+### Food Insufficiency (Children)
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national Food Insufficiency Children}
+nationalchart(national_food_child, title="Households with Children That Do Not Have Enough Food to Eat")
+```
+
+### Computer Availability
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national tech}
+nationalchart(national_nodevice, title="Households without a Computer Available to Children for Educational Purposes")
+```
+
+### Internet Availability
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national internet}
+nationalchart(national_nointernet, title="Households without Internet Available to Children for Educational Purposes")
+```
+
+### Lacking Health Insurance
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national insurance}
+nationalchart(national_noinsurance, title="Adults Who Lack Health Insurance")
+```
+
+### Private Health Insurance
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national private}
+nationalchart(national_privinsurance, title="Adults with Private Health Insurance Coverage")
+```
+
+### Public Health Insurance
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national public}
+nationalchart(national_pubinsurance, title="Adults with Public Health Insurance Coverage")
+```
+
+### Anxiety
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national anx/dep}
+nationalchart(national_mental, title="Adults Who Felt Anxious for More Than Half of the Days in the Past Week")
+```
+
+
+National Appendix {data-navmenu="Latest Trends"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+### Loss of Income
+<h4>Adults with Employment Income Loss</h4>
+<h6>The share of adults ages 18 and older who reported that they or someone in their household had experienced a loss of employment income since March 13, 2020.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix}
+buildadatatable2(national_income, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian", "Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Missed Rent
+<h4>Adults in Households That Missed Last Month’s Rent Payment</h4>
+<h6>The share of adults ages 18 and older living in renter-occupied households that missed the previous month’s rent payment. (Note: Data are restricted to renter-occupied households that have a monthly rent payment and exclude households with rent payments that were deferred. Data for July 21 and earlier periods reflect households that did not pay last month’s rent on time, while data for August 19 and later periods reflect households that are not “currently caught up on rent payments.”)</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix2}
+buildadatatable2(national_rent, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian","Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Missed Mortgage
+<h4>Adults in Households That Missed Last Month’s Mortgage Payment</h4>
+<h6>The share of adults ages 18 and older living in owner-occupied households that missed the previous month’s mortgage payment. (Note: Data are restricted to owner-occupied households that have a monthly mortgage payment and exclude households with mortgage payments that were deferred. Data for July 21 and earlier periods reflect households that did not pay last month’s mortgage on time, while data for August 19 and later periods reflect households that are not “currently caught up on mortgage payments.”)</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix3}
+buildadatatable2(national_mortgage, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian","Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Classes Cancelled
+<h4>Households with Children Who Had Class Cancelled</h4>
+<h6>The share of adults ages 18 and older living in households with at least one child attending public or private school (kindergarten through 12th grade) who had classes cancelled because of COVID-19.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix4}
+buildadatatable2(national_cancelled, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian","Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Distance Learning
+<h4>Households with Children Whose Classes Moved to an Online Format</h4>
+<h6>The share of adults ages 18 and older living in households with at least one child attending public or private school (K-12) whose classes were moved to a distance-learning format using online resources, either self-paced or in real time, because of COVID-19.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix5}
+buildadatatable2(national_distance, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian","Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Food Insufficiency (Total)
+<h4>Households That Do Not Have Enough Food to Eat</h4>
+<h6>The share of adults ages 18 and older who reported that their household sometimes or often did not have enough food to eat in the past seven days.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix7}
+buildadatatable2(national_food, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian",
+                                   "Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Food Insufficiency (Children)
+<h4>Households with Children That Do Not Have Enough Food to Eat</h4>
+<h6>The share of adults ages 18 and older in households with children under age 18 who reported that their household sometimes or often did not have enough food to eat in the past seven days.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix8}
+buildadatatable2(national_food_child, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian",
+                                   "Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Computer Availability
+<h4>Households without a Computer Available to Children for Educational Purposes</h4>
+<h6>The share of adults ages 18 and older living in households with at least one child attending public or private school (K-12) in which a computer or digital device is rarely or never available to children for educational purposes.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix9}
+buildadatatable2(national_nodevice, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian",
+                                   "Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Internet Availability
+<h4>Households without Internet Available to Children for Educational Purposes</h4>
+<h6>The share of adults ages 18 and older living in households with at least one child attending public or private school (K-12) in which internet is rarely or never available to children for educational purposes. (Note: The Household Pulse Survey does not distinguish between broadband and other kinds of internet access.)</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix10}
+buildadatatable2(national_nointernet, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian",
+                                   "Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Lacking Health Insurance
+<h4>Adults Who Lack Health Insurance</h4>
+<h6>The share of adults ages 18 to 64 who reported that they currently do not have health insurance. Adults were classified as uninsured if they did not report any private health insurance coverage or public health plan coverage at the time of the interview. Following Census Bureau and CDC guidelines, adults were also classified as uninsured if they had only Indian Health Service coverage.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix11}
+buildadatatable2(national_noinsurance, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian",
+                                   "Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Private Health Insurance
+<h4>Adults with Private Health Insurance Coverage</h4>
+<h6>The share of adults ages 18 to 64 who reported that they had insurance through 1) a current or former employer or union; 2) insurance purchased directly from an insurance company, including marketplace coverage; or 3) TRICARE or other military health care. (Note: The private and public categories are not mutually exclusive; adults can be enrolled in both.)</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix12}
+buildadatatable2(national_privinsurance, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian",
+                                   "Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Public Health Insurance
+<h4>Adults with Public Health Insurance Coverage</h4>
+<h6>The share of adults ages 18 to 64 who reported that they had 1) Medicare, 2) Medicaid, or 3) VA health care. (Note: The private and public categories are not mutually exclusive; adults can be enrolled in both.)</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix13}
+buildadatatable2(national_pubinsurance, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian",
+                                   "Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+### Anxiety
+<h4>Adults Who Felt Anxious for More Than Half of the Days in the Past Week</h4>
+<h6>The share of adults ages 18 and older who reported that they felt nervous, anxious or on edge for more than half of the days or nearly every day in the past seven days.</h6>
+<h6>For more information about these data, please see <a href="./Unidos_Dashboard.html#notes-and-definitions" target="_blank">Notes and Definitions</a>.</h6>
+```{r, national appendix14}
+buildadatatable2(national_mental, columns=c("Week","Total","Hispanic/Latino","Non-Hispanic White","Non-Hispanic Asian",
+                                   "Non-Hispanic Black","Non-Hispanic Other"))
+```
+
+Projections - COVID-19 Cases {data-navmenu="COVID-19 Projections"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+
+### Arizona
+```{r, cases Arizona}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+    
+    fig <- plot_ly(cases, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~arizona_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(cases$arizona_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~arizona_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(cases$arizona_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~arizona_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                             name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(cases$arizona_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~arizona_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(cases$arizona_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~arizona_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(cases$arizona_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~arizona_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(cases$arizona_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Cases for Arizona",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    
+    fig
+    
+```
+
+### California
+```{r, cases California}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+      
+    fig <- plot_ly(cases, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~california_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(cases$california_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~california_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(cases$california_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~california_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                             name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(cases$california_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~california_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(cases$california_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~california_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(cases$california_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~california_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(cases$california_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Cases for California",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    fig
+    
+```
+
+### Colorado
+```{r, cases Colorado}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+          
+    fig <- plot_ly(cases, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~colorado_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(cases$colorado_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~colorado_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(cases$colorado_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~colorado_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                              name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(cases$colorado_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~colorado_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(cases$colorado_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~colorado_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(cases$colorado_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~colorado_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(cases$colorado_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Cases for Colorado",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    fig
+    
+```
+
+### Florida
+```{r, cases Florida}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+    
+    fig <- plot_ly(cases, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~florida_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(cases$florida_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~florida_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(cases$florida_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~florida_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                             name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(cases$florida_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~florida_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(cases$florida_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~florida_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(cases$florida_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~florida_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(cases$florida_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Cases for Florida",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    fig
+    
+```
+
+### Nevada
+```{r, cases Nevada}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+      
+    fig <- plot_ly(cases, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~nevada_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(cases$nevada_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~nevada_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(cases$nevada_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~nevada_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                             name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(cases$nevada_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~nevada_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(cases$nevada_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~nevada_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(cases$nevada_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~nevada_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(cases$nevada_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Cases for Nevada",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    fig
+    
+```
+
+### Texas
+```{r, cases Texas}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+      
+    fig <- plot_ly(cases, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~texas_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(cases$texas_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~texas_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(cases$texas_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~texas_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                             name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(cases$texas_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~texas_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(cases$texas_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~texas_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(cases$texas_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~texas_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(cases$texas_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Cases for Texas",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    fig
+    
+```
+
+
+Projections - COVID-19 Deaths {data-navmenu="COVID-19 Projections"}
+===================================
+Row {.tabset}
+-----------------------------------------------------------------------
+
+### Arizona
+```{r, deaths Arizona}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+          
+    fig <- plot_ly(deaths, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~arizona_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(deaths$arizona_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~arizona_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(deaths$arizona_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~arizona_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                             name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(deaths$arizona_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~arizona_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(deaths$arizona_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~arizona_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(deaths$arizona_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~arizona_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(deaths$arizona_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Deaths for Arizona",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    fig
+    
+```
+
+### California
+```{r, deaths California}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+      
+    fig <- plot_ly(deaths, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~california_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(deaths$california_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~california_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(deaths$california_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~california_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                             name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(deaths$california_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~california_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(deaths$california_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~california_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(deaths$california_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~california_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(deaths$california_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Deaths for California",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    fig
+    
+```
+
+### Colorado
+```{r, deaths Colorado}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+      
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+    fig <- plot_ly(deaths, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~colorado_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(deaths$colorado_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~colorado_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(deaths$colorado_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~colorado_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                             name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(deaths$colorado_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~colorado_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(deaths$colorado_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~colorado_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(deaths$colorado_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~colorado_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(deaths$colorado_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Deaths for Colorado",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    fig
+    
+```
+
+### Florida
+```{r, deaths Florida}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+    fig <- plot_ly(deaths, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~florida_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(deaths$florida_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~florida_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(deaths$florida_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~florida_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                             name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(deaths$florida_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~florida_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(deaths$florida_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~florida_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(deaths$florida_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~florida_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(deaths$florida_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Deaths for Florida",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    fig
+    
+```
+
+### Nevada
+```{r, deaths Nevada}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+      
+    fig <- plot_ly(deaths, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~nevada_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(deaths$nevada_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~nevada_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(deaths$nevada_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~nevada_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                             name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(deaths$nevada_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~nevada_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(deaths$nevada_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~nevada_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(deaths$nevada_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~nevada_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(deaths$nevada_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Deaths for Nevada",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    fig
+    
+```
+
+### Texas
+```{r, deaths Texas}
+xaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showline = TRUE,
+                  showgrid = FALSE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = FALSE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickwidth = 2,
+                  ticklen = 5,
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'))
+    
+    yaxis <- list(title = "",
+                  fixedrange = TRUE,
+                  showgrid = FALSE,
+                  zeroline = FALSE,
+                  showline = TRUE,
+                  showticklabels = TRUE,
+                  linecolor = 'rgb(204, 204, 204)',
+                  linewidth = 2,
+                  autotick = TRUE,
+                  ticks = 'outside',
+                  tickcolor = 'rgb(204, 204, 204)',
+                  tickfont = list(family = 'Arial',
+                                  size = 12,
+                                  color = 'rgb(82, 82, 82)'),
+                  rangemode = "tozero")
+    
+    margin <- list(autoexpand = TRUE,
+                   l = 150,
+                   r = 150,
+                   t = 35)
+    
+      caption <- list(
+      xref = 'paper',
+      x = 0,
+      y = -0.1,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("Note: Click on the “COVID-19 Projections” menu for information on projection methods."),
+      font = list(family = 'Arial',
+                  size = 10,
+                  color = "black"),
+                  showarrow = FALSE)
+    
+    fig <- plot_ly(deaths, x = ~time)
+    
+    fig <- fig %>% add_trace(y = ~texas_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(deaths$texas_low_hispanic, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~texas_mid_hispanic, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2),
+                             name = 'Hispanic/Latino, Middle Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(deaths$texas_mid_hispanic, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~texas_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(228, 27, 35)', width = 5),
+                             line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
+                             name = 'Hispanic/Latino, High Estimate',
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(deaths$texas_high_hispanic, big.mark=","), "<extra></extra>"))
+     
+    fig <- fig %>% add_trace(y = ~texas_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dash'), name = 'Total Population, Low Estimate',
+                             hovertemplate = paste0("Total Population, low estimate: ", prettyNum(deaths$texas_low_total, big.mark=","), "<extra></extra>"))  
+   
+     fig <- fig %>% add_trace(y = ~texas_mid_total, type = 'scatter', mode = 'lines+markers',
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2),
+                             name = 'Total Population, Middle Estimate',
+                             hovertemplate = paste0('Total Population, middle estimate: ', prettyNum(deaths$texas_mid_total, big.mark=","), "<extra></extra>")) 
+     
+     fig <- fig %>% add_trace(y = ~texas_high_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
+                             marker = list(color = 'rgb(69,117,180)', width = 5),
+                             line = list(color = 'rgb(69,117,180)', width = 2, dash='dot'),
+                             name = 'Total Population, High Estimate',
+                             hovertemplate = paste0('Total Population, high estimate: ', prettyNum(deaths$texas_high_total, big.mark=","), "<extra></extra>")) 
+        
+    fig <- fig %>% layout(title = "Projected Coronavirus Deaths for Texas",
+                      xaxis = xaxis, yaxis = yaxis, margin = margin,
+                      autosize = TRUE,
+                      showlegend = TRUE,
+                      #shapes = list(vline(0), vline(2), vline(5.3)),
+                      showlegend=legend)
+    
+    #fig <- fig %>% layout(annotations = overall_12) 
+    fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
+    fig <- fig %>% layout(annotations = caption) 
+    fig
+    
+```
