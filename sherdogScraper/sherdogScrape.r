@@ -1,10 +1,11 @@
 library(rvest)
 library(httr)
+library(stringr)
 
 # initializing some empty objects for the loop
 # counter can be set for where to start and where to end w/ sherdog URL
-counter <- c(1:1000)
-i <- 1
+counter <- c(1:500)
+i <- 0
 fullRecords <- data.frame()[1:8,]
 
 startTime <- Sys.time()
@@ -30,7 +31,6 @@ for (i in counter) {
       html_table(fill = TRUE)
     
     # need to fix it so that if there is an upcoming fight, it pulls from the 2nd table
-    # alistair overeem's upcoming fight
     if (sum(grepl("Result", tablesParsed[[1]]$X1)) == 0){
       tablesParsed <- site %>%
         html_nodes("table") %>%
@@ -43,10 +43,10 @@ for (i in counter) {
     
     if (is.na(fightRecord$X1) == FALSE){
       fighterName <- html_nodes(site, ".fn") %>% html_text
+      fighterID <- counter[i]
+      fightRecord <- cbind(fighterID, fighterName, fightRecord)
       
-      fightRecord <- cbind(fighterName, fightRecord)
-      
-      colnames(fightRecord) <- c("Name", "Result", "Fighter", "Event", "Method/Referee", "Round", "Time")
+      colnames(fightRecord) <- c("FighterID", "Fighter", "Result", "Opponent", "Event", "Method", "Round", "Time")
       fightRecord<- fightRecord[2:nrow(fightRecord),]
       
       # binding the individual fight record to the fullRecord data frame
@@ -61,4 +61,17 @@ for (i in counter) {
 endTime <- Sys.time()
 endTime - startTime
 
-write.csv(fullRecords, "/home/m/Documents/R/MMA/fullRecordsFirst1k.csv")
+# creating a copy of df for manipulating
+fullRecords2 <- fullRecords
+
+# function for grabbing last n characters of a string
+substrRight <- function(x, n){
+  substr(x, nchar(x)-n+1, nchar(x))
+}
+
+# creating a new date variable and formatting
+fullRecords2$Date <- substrRight(fullRecords2$Event, 15)
+fullRecords2$Date <- gsub(" ", "", fullRecords2$Date, fixed = TRUE)
+fullRecords2$Date <- as.Date(fullRecords2$Date, "%b/%d/%Y")
+
+write.csv(fullRecords2, "/home/m/Documents/R/MMA/fullRecordsFirst500.csv")
