@@ -4,7 +4,7 @@ library(stringr)
 
 # initializing some empty objects for the loop
 # counter can be set for where to start and where to end w/ sherdog URL
-counter <- c(1:500)
+counter <- c(1:5000)
 i <- 0
 fullRecords <- data.frame()[1:8,]
 
@@ -64,14 +64,14 @@ endTime - startTime
 # creating a copy of df for manipulating
 fullRecords2 <- fullRecords
 
-# function for grabbing last n characters of a string
-substrRight <- function(x, n){
-  substr(x, nchar(x)-n+1, nchar(x))
-}
-
 # creating a new date variable and formatting
-fullRecords2$Date <- substrRight(fullRecords2$Event, 15)
+fullRecords2$Date <- str_sub(fullRecords2$Event, start=-15)
 fullRecords2$Date <- gsub(" ", "", fullRecords2$Date, fixed = TRUE)
 fullRecords2$Date <- as.Date(fullRecords2$Date, "%b/%d/%Y")
+
+fullRecords2$Event <- str_sub(fullRecords2$Event, end = nchar(fullRecords2$Event)-15)
+
+# still working on this, need a few exceptions for Draw, Decision, and KO
+FullRecords2$Method2 <- str_sub(fullRecords2$Method, end=str_locate(fullRecords2$Method, "\\)")[,1])
 
 write.csv(fullRecords2, "/home/m/Documents/R/MMA/fullRecordsFirst500.csv")
