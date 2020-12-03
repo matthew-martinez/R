@@ -7,9 +7,9 @@ library(tidyverse)
 
 # initializing some empty objects for the loop
 # counter can be set for where to start and where to end w/ sherdog URL
-counter <- c(1:5)
+counter <- c(1:2000)
 i <- 0
-fullRecords <- data.frame()[1:8,]
+fullRecords <- data.frame()
 
 startTime <- Sys.time()
 
@@ -78,20 +78,24 @@ for (i in counter) {
       # selecting only the first element of the list of data frames and creating an individual fight record
       fightRecord <- tablesParsed[[1]]
       fightRecord$Date <- eventDate[2]
-      fightRecord$Result <- "Win"
-        
+      fightRecord <- fightRecord %>%
+        mutate(Result = if_else(str_detect(X5, "DrawN/A"), "Draw", "Win"))
+      
       colnames(fightRecord) <- c("Match", "Fighter", "vs.", "Opponent", "Method", "Round", "Time", "Date", "Result")
       
       fightRecord <- fightRecord %>%
         select(Match, Fighter, Result, Opponent, Method, Round, Time, Date)
       
       fightRecord <- fightRecord[2:nrow(fightRecord),]
+
+      fightRecord$Fighter[fightRecord$Result == "Draw"] <- str_sub(fightRecord$Fighter[fightRecord$Result == "Draw"], end=-5)
+      fightRecord$Opponent[fightRecord$Result == "Draw"]  <- str_sub(fightRecord$Opponent[fightRecord$Result == "Draw"], end=-5)
       
-      fightRecord$Fighter <- str_sub(fightRecord$Fighter, end=(str_locate(fightRecord$Fighter, "win")[,1]-1))
-      fightRecord$Opponent <- str_sub(fightRecord$Opponent, end=(str_locate(fightRecord$Opponent, "loss")[,1]-1))
+      fightRecord$Fighter[fightRecord$Result == "Win"] <- str_sub(fightRecord$Fighter[fightRecord$Result == "Win"], end=-4)
+      fightRecord$Opponent[fightRecord$Result == "Win"] <- str_sub(fightRecord$Opponent[fightRecord$Result == "Win"], end=-5)
       
       fightRecord <- rbind(mainEvent, fightRecord)
-      
+
       fullRecords <- rbind(fullRecords, fightRecord)
     }
   }
@@ -102,4 +106,4 @@ fullRecords$Date <- as.Date(fullRecords$Date, "%b %d, %Y")
 endTime <- Sys.time()
 endTime - startTime
 
-#write.csv(fullRecords, "/home/m/Documents/R/MMA/eventRecordsFirst5000.csv")
+write.csv(fullRecords, "/home/m/Documents/R/MMA/eventRecordsFirst2000.csv")
