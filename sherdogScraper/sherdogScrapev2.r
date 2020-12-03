@@ -7,7 +7,7 @@ library(tidyverse)
 
 # initializing some empty objects for the loop
 # counter can be set for where to start and where to end w/ sherdog URL
-counter <- c(1:500)
+counter <- c(1:5)
 i <- 0
 fullRecords <- data.frame()[1:8,]
 
@@ -87,6 +87,9 @@ for (i in counter) {
       
       fightRecord <- fightRecord[2:nrow(fightRecord),]
       
+      fightRecord$Fighter <- str_sub(fightRecord$Fighter, end=(str_locate(fightRecord$Fighter, "win")[,1]-1))
+      fightRecord$Opponent <- str_sub(fightRecord$Opponent, end=(str_locate(fightRecord$Opponent, "loss")[,1]-1))
+      
       fightRecord <- rbind(mainEvent, fightRecord)
       
       fullRecords <- rbind(fullRecords, fightRecord)
@@ -99,4 +102,4 @@ fullRecords$Date <- as.Date(fullRecords$Date, "%b %d, %Y")
 endTime <- Sys.time()
 endTime - startTime
 
-write.csv(fullRecords, "/home/m/Documents/R/MMA/eventRecordsFirst500.csv")
+#write.csv(fullRecords, "/home/m/Documents/R/MMA/eventRecordsFirst5000.csv")
