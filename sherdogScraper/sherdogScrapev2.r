@@ -147,9 +147,8 @@ for (i in 1:5000){
         fightRecord <- rbind(mainEvent, fightRecord)
         fightRecord$Event <- event[[1]][1]
         fightRecord$EventID <- i
-        fightRecord$Promotion <- event[[1]][2]
-        fightRecord$Promotion <- str_sub(fightRecord$Promotion, start=5)
-        
+        fightRecord$Promotion <- str_split(event[[1]][2], "\\t")[[1]][3]
+        #fightRecord$Promotion <- str_sub(fightRecord$Promotion, start=5)
         fightRecord <- fightRecord %>%
           select(Promotion, Event, EventID, Match, Fighter, FighterID, Result, Opponent, OpponentID, Method, Round, Time, Date)
   
@@ -160,9 +159,9 @@ for (i in 1:5000){
 }
 
 fullRecords$Date <- as.Date(fullRecords$Date, "%b %d, %Y")
-      
+
 endTime <- Sys.time()
 endTime - startTime
 
-write.csv(urlLogger, "/home/m/Documents/R/MMA/urlLog.csv")
+write.csv(urlLogger, "/home/m/Documents/R/MMA/urlLog1to5000.csv")
 write.csv(fullRecords, "/home/m/Documents/R/MMA/eventRecords1to5000.csv")
