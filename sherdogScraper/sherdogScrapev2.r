@@ -16,7 +16,7 @@ logDf <- data.frame()
 random <- floor(runif(5000, min=1, max=88000))
 
 # loop through as many interations as the above counter specifies
-for (i in 1:5000){
+for (i in c(1,2,3,4,43,3432,347,3424)){
   # creating the sherdog URL
   site <- NULL
   sessionLogger <- NULL
@@ -154,6 +154,17 @@ for (i in 1:5000){
   
         fullRecords <- rbind(fullRecords, fightRecord)
       }
+        if (is.na(tables) == TRUE) {
+          fightRecord <- mainEvent
+          fightRecord$Event <- event[[1]][1]
+          fightRecord$EventID <- i
+          fightRecord$Promotion <- str_split(event[[1]][2], "\\t")[[1]][3]
+          #fightRecord$Promotion <- str_sub(fightRecord$Promotion, start=5)
+          fightRecord <- fightRecord %>%
+            select(Promotion, Event, EventID, Match, Fighter, FighterID, Result, Opponent, OpponentID, Method, Round, Time, Date)
+          
+          fullRecords <- rbind(fullRecords, fightRecord)
+        }
     }
   }
 }
@@ -163,5 +174,5 @@ fullRecords$Date <- as.Date(fullRecords$Date, "%b %d, %Y")
 endTime <- Sys.time()
 endTime - startTime
 
-write.csv(urlLogger, "/home/m/Documents/R/MMA/urlLog1to5000.csv")
+write.csv(logDf, "/home/m/Documents/R/MMA/urlLog1to5000.csv")
 write.csv(fullRecords, "/home/m/Documents/R/MMA/eventRecords1to5000.csv")
