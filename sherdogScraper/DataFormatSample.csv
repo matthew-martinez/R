@@ -1,0 +1,11 @@
+,Promotion,Event,EventID,Date,Fight.Number,Fighter,FighterID,FighterBirthdate,FighterAge,FighterPreFightScore,Opponent,OpponentID,OpponentBirthdate,OpponentAge,OpponentPreFightScore,Result,Method,Round,Time,FighterPostFightScore,OpponentPostFightScore,FighterML,OpponentML,Weightclass
+1,Ultimate Fighting Championship (UFC),UFC 1The Beginning,7,11/12/93,1,Gerard Gordeau,Gerard-Gordeau-15,3/30/55,38.65,1000,Teila Tuli,Teila-Tuli-16,6/14/69,24.43,1000,Win,Technical Knockout,1,0:26,1050,950,138,-175,170
+2,Ultimate Fighting Championship (UFC),UFC 1The Beginning,7,11/12/93,2,Kevin Rosier,Kevin-Rosier-17,1/6/62,31.87,1000,Zane Frazier,Zane-Frazier-18,7/16/66,27.35,1000,Win,Technical Knockout,1,4:20,1050,950,-200,160,170
+3,Ultimate Fighting Championship (UFC),UFC 1The Beginning,7,11/12/93,3,Royce Gracie,Royce-Gracie-19,12/12/66,26.94,1000,Art Jimmerson,Art-Jimmerson-20,8/4/63,30.3,1000,Win,Submission,1,2:18,1050,950,100,-125,155
+4,Ultimate Fighting Championship (UFC),UFC 1The Beginning,7,11/12/93,4,Ken Shamrock,Ken-Shamrock-4,2/11/64,29.77,1136,Patrick Smith,Patrick-Smith-21,8/28/63,30.23,1000,Win,Submission,1,1:49,1167,969,-500,350,135
+5,Ultimate Fighting Championship (UFC),UFC 1The Beginning,7,11/12/93,5,Gerard Gordeau,Gerard-Gordeau-15,3/30/55,38.65,1050,Kevin Rosier,Kevin-Rosier-17,1/6/62,31.87,1050,Win,Technical Knockout,1,0:59,1100,1000,-278,210,205
+6,Ultimate Fighting Championship (UFC),UFC 1The Beginning,7,11/12/93,6,Royce Gracie,Royce-Gracie-19,12/12/66,26.94,1050,Ken Shamrock,Ken-Shamrock-4,2/11/64,29.77,1167,Win,Submission,1,0:57,1116,1101,200,-250,125
+7,Ultimate Fighting Championship (UFC),UFC 1The Beginning,7,11/12/93,7,Jason DeLucia,Jason-DeLucia-22,7/24/69,24.32,1000,Trent Jenkins,Trent-Jenkins-23,NA,NA,1000,Win,Submission,1,0:52,1050,950,160,-200,155
+8,Ultimate Fighting Championship (UFC),UFC 1The Beginning,7,11/12/93,8,Royce Gracie,Royce-Gracie-19,12/12/66,26.94,1116,Gerard Gordeau,Gerard-Gordeau-15,3/30/55,38.65,1100,Win,Submission,1,1:44,1164,1052,-110,-110,205
+9,Ultimate Fighting Championship (UFC),UFC 2No Way Out,8,3/11/94,1,Scott Morris,Scott-Morris-24,NA,NA,1000,Sean Daugherty,Sean-Daugherty-25,12/4/75,18.28,1000,Win,Submission,1,0:20,1050,950,-161,130,W125
+,,,,,,,,,,,,,,,,,,,,,,,,
