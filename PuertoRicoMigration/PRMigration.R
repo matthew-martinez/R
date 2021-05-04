@@ -145,3 +145,36 @@ layout(geo = g,
          scrollZoom=TRUE)
 
 fig
+
+
+
+quantile(prFlowsMerge$estimate)
+
+prFlowsMerge$estimateCat[prFlowsMerge$estimate <= 63] <- "Very Low"
+prFlowsMerge$estimateCat[prFlowsMerge$estimate > 63 & prFlowsMerge$estimate <= 195] <- "Low"
+prFlowsMerge$estimateCat[prFlowsMerge$estimate > 195 & prFlowsMerge$estimate <= 515] <- "Moderate"
+prFlowsMerge$estimateCat[prFlowsMerge$estimate > 515] <- "High"
+
+prFlowsMerge$estimateCat <- factor(prFlowsMerge$estimateCat, levels=c("Very Low","Low","Moderate","High"), ordered=T)
+
+fig2 <- plot_geo(prFlowsMerge, lat = ~Lat, lon = ~Long)
+fig2 <- fig2 %>% add_markers(
+  text = ~paste0("<b>", prFlowsMerge$Location, ", ", prFlowsMerge$State, "</b> <br>",
+                 "<b>Estimate: </b>", formatC(prFlowsMerge$estimate, big.mark=",")),
+  color = ~estimateCat,
+  colors = c("#fcbba1","#fb6a4a","#cb181d", "#67000d"),
+  symbol = I("circle"), 
+  size = I(56), 
+  hoverinfo = "text"
+)
+fig2 <- fig2 %>% layout(
+  title = 'Puerto Rican Migration To United States<br /> Totals By County, 2010-2018', 
+  geo = g,
+  legend=list(title=list(text='<b> Migration Level </b>'),
+              y=.001,
+              x=.5,
+              xanchor="center",
+              orientation="h")
+)
+
+fig2
