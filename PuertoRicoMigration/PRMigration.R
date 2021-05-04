@@ -139,7 +139,7 @@ fig <- fig %>% add_markers(
                  "<b>Estimate: </b>", formatC(prFlowsMerge$estimate, big.mark=","))) %>% 
 layout(geo = g, 
        showlegend=FALSE, 
-       title="Puerto Rican Migration To United States: Total from 2010-2018",
+       title="Puerto Rican Migration To United States: Totals By County, 2010-2018",
        font="Arial") %>% 
   config(displayModeBar = F,
          scrollZoom=TRUE)
