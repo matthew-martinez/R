@@ -12,11 +12,7 @@ output:
 
 ```{r, setup, include=FALSE}
 
-# Modify the Tech line - "Click on the drop-down Menu above to explore different topics. All graphs can be exported, and data can also be  downloaded in Excel and PDF formats. We strongly recommend viewing the dashboard in full-screen format."
-
-# add note to the bottom of DataTables
-
-# spot check
+# remove 50k- keep 100k, 200k, 400k - check to see how squished everything gets
 
 library(knitr)
 library(openxlsx)
@@ -27,8 +23,8 @@ library(htmltools)
 ```
 
 ```{r, national, include=FALSE}
-national_income <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Income table.xlsx', sheet='Two_week_race')
-national_income$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_income <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1 Experienced loss of employment income.xlsx', sheet='Two_week_race')
+national_income$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_income <- national_income %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -40,14 +36,14 @@ national_income <- national_income %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
 
-national_income$weeks <- factor(national_income$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_income$weeks <- factor(national_income$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_income <- national_income %>% arrange(weeks)
 
 #############################
 
-national_mortgage <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1a Missed last month’s payment (owners)_rev1.xlsx', sheet='Two_week_race')
-national_mortgage$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_mortgage <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1a Missed last month’s payment (owners).xlsx', sheet='Two_week_race')
+national_mortgage$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_mortgage <- national_mortgage %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -59,14 +55,14 @@ national_mortgage <- national_mortgage %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
 
-national_mortgage$weeks <- factor(national_mortgage$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_mortgage$weeks <- factor(national_mortgage$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_mortgage <- national_mortgage %>% arrange(weeks)
 
 #############################
 
-national_rent <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1b Missed last month’s payment (renters)_rev1.xlsx', sheet='Two_week_race')
-national_rent$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_rent <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1b Missed last month’s payment (renters).xlsx', sheet='Two_week_race')
+national_rent$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_rent <- national_rent %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -77,14 +73,14 @@ national_rent <- national_rent %>%
          other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
-national_rent$weeks <- factor(national_rent$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_rent$weeks <- factor(national_rent$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_rent <- national_rent %>% arrange(weeks)
 
 #############################
 
 national_cancelled <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2 Classes were cancelled.xlsx', sheet='Two_week_race')
-national_cancelled$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_cancelled$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_cancelled <- national_cancelled %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -95,14 +91,14 @@ national_cancelled <- national_cancelled %>%
          other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
-national_cancelled$weeks <- factor(national_cancelled$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_cancelled$weeks <- factor(national_cancelled$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_cancelled <- national_cancelled %>% arrange(weeks)
 
 #############################
 
-national_distance <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2 Classes were moved to a distance learning format.xlsx', sheet='Two_week_race')
-national_distance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_distance <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2 Classes were moved to an online learning format.xlsx', sheet='Two_week_race')
+national_distance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_distance <- national_distance %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -113,14 +109,14 @@ national_distance <- national_distance %>%
          other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
-national_distance$weeks <- factor(national_distance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_distance$weeks <- factor(national_distance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_distance <- national_distance %>% arrange(weeks)
 
 #############################
 
-national_mental <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2a_b Experienced symptoms of anxiety OR depression more than half the days or nearly every day during the past 7 days.xlsx', sheet='Two_week_race')
-national_mental$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_mental <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2a_b Experienced symptoms of anxiety more than half the days during the past 7 days.xlsx', sheet='Two_week_race')
+national_mental$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_mental <- national_mental %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -131,14 +127,14 @@ national_mental <- national_mental %>%
          other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
-national_mental$weeks <- factor(national_mental$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_mental$weeks <- factor(national_mental$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_mental <- national_mental %>% arrange(weeks)
 
 #############################
 
 national_food <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2b Sometimes or often do not have enough food to eat.xlsx', sheet='Two_week_race')
-national_food$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_food$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_food <- national_food %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -149,14 +145,14 @@ national_food <- national_food %>%
          other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
-national_food$weeks <- factor(national_food$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_food$weeks <- factor(national_food$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_food <- national_food %>% arrange(weeks)
 
 #############################
 
 national_nodevice <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Devices rarely or never available for educational purposes.xlsx', sheet='Two_week_race')
-national_nodevice$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_nodevice$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_nodevice <- national_nodevice %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -167,14 +163,14 @@ national_nodevice <- national_nodevice %>%
          other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
-national_nodevice$weeks <- factor(national_nodevice$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_nodevice$weeks <- factor(national_nodevice$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_nodevice <- national_nodevice %>% arrange(weeks)
 
 #############################
 
 national_nointernet <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Internet rarely or never available for educational purposes.xlsx', sheet='Two_week_race')
-national_nointernet$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_nointernet$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_nointernet <- national_nointernet %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -185,14 +181,14 @@ national_nointernet <- national_nointernet %>%
          other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
-national_nointernet$weeks <- factor(national_nointernet$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_nointernet$weeks <- factor(national_nointernet$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_nointernet <- national_nointernet %>% arrange(weeks)
 
 #############################
 
 national_noinsurance <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 No health insurance.xlsx', sheet='Two_week_race')
-national_noinsurance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_noinsurance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_noinsurance <- national_noinsurance %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -203,14 +199,14 @@ national_noinsurance <- national_noinsurance %>%
          other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
-national_noinsurance$weeks <- factor(national_noinsurance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_noinsurance$weeks <- factor(national_noinsurance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_noinsurance <- national_noinsurance %>% arrange(weeks)
 
 #############################
 
 national_pubinsurance <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Public insurance.xlsx', sheet='Two_week_race')
-national_pubinsurance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_pubinsurance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_pubinsurance <- national_pubinsurance %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -221,14 +217,14 @@ national_pubinsurance <- national_pubinsurance %>%
          other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
-national_pubinsurance$weeks <- factor(national_pubinsurance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_pubinsurance$weeks <- factor(national_pubinsurance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_pubinsurance <- national_pubinsurance %>% arrange(weeks)
 
 #############################
 
 national_privinsurance <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Private insurance.xlsx', sheet='Two_week_race')
-national_privinsurance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_privinsurance$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_privinsurance <- national_privinsurance %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -239,14 +235,14 @@ national_privinsurance <- national_privinsurance %>%
          other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
-national_privinsurance$weeks <- factor(national_privinsurance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_privinsurance$weeks <- factor(national_privinsurance$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_privinsurance <- national_privinsurance %>% arrange(weeks)
 
 #############################
 
 national_food_child <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3b Sometimes or often do not have enough food to eat—for households with children present.xlsx', sheet='Two_week_race')
-national_food_child$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
+national_food_child$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
 
 national_food_child <- national_food_child %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -257,17 +253,17 @@ national_food_child <- national_food_child %>%
          other_perc = round(Num_NHO/tDenom_NHO*100,1)) %>%
   select(weeks, overall_perc, hisp_perc, white_perc, asian_perc, black_perc, other_perc)
 
-national_food_child$weeks <- factor(national_food_child$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+national_food_child$weeks <- factor(national_food_child$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 national_food_child <- national_food_child %>% arrange(weeks)
 
 ```
 
 ```{r, income, include=FALSE}
-income <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Income table.xlsx', sheet='Two_week_aggregate')
+income <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1 Experienced loss of employment income.xlsx', sheet='Two_week_aggregate')
 
-income$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-income$weeks <- factor(income$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+income$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+income$weeks <- factor(income$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 income <- income %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -308,8 +304,8 @@ income_co <- income %>%
 # Food Table 2b
 
 food2b <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2b Sometimes or often do not have enough food to eat.xlsx', sheet='Two_week_aggregate')
-food2b$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-food2b$weeks <- factor(food2b$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+food2b$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+food2b$weeks <- factor(food2b$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 food2b <- food2b %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -347,8 +343,8 @@ food2b_co <- food2b %>%
 # Food Table 3b
 
 food3b <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3b Sometimes or often do not have enough food to eat—for households with children present.xlsx', sheet='Two_week_aggregate')
-food3b$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-food3b$weeks <- factor(food3b$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+food3b$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+food3b$weeks <- factor(food3b$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 food3b <- food3b %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -403,8 +399,8 @@ food_dt <- cbind(food2b_dt, food3b_dt)
 # Health Table 3
 
 health3 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 No health insurance.xlsx', sheet='Two_week_aggregate')
-health3$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-health3$weeks <- factor(health3$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+health3$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+health3$weeks <- factor(health3$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 health3 <- health3 %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -442,8 +438,8 @@ health3_co <- health3 %>%
 # Health Table 3
 
 health3_2 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Public insurance.xlsx', sheet='Two_week_aggregate')
-health3_2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-health3_2$weeks <- factor(health3_2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+health3_2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+health3_2$weeks <- factor(health3_2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 health3_2 <- health3_2 %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -481,8 +477,8 @@ health3_2_co <- health3_2 %>%
 # Health Table 3
 
 health4 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Private insurance.xlsx', sheet='Two_week_aggregate')
-health4$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-health4$weeks <- factor(health4$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+health4$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+health4$weeks <- factor(health4$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 health4 <- health4 %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -538,8 +534,8 @@ health_dt <- cbind(health4_dt, health3_2_dt)
 # Education Table 2
 
 education2 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2 Classes were cancelled.xlsx', sheet='Two_week_aggregate')
-education2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-education2$weeks <- factor(education2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+education2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+education2$weeks <- factor(education2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 education2 <- education2 %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -576,9 +572,9 @@ education2_co <- education2 %>%
 
 # Education Table 2_2
 
-education2_2 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2 Classes were moved to a distance learning format.xlsx', sheet='Two_week_aggregate')
-education2_2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-education2_2$weeks <- factor(education2_2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+education2_2 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2 Classes were moved to an online learning format.xlsx', sheet='Two_week_aggregate')
+education2_2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+education2_2$weeks <- factor(education2_2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 education2_2 <- education2_2 %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -630,8 +626,8 @@ edu2_dt <- cbind(education2_dt, education2_2_dt)
 # Education Table 3
 
 education3 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Devices rarely or never available for educational purposes.xlsx', sheet='Two_week_aggregate')
-education3$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-education3$weeks <- factor(education3$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+education3$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+education3$weeks <- factor(education3$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 education3 <- education3 %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -669,8 +665,8 @@ education3_co <- education3 %>%
 # Education Table 3_2
 
 education3_2 <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 3 Internet rarely or never available for educational purposes.xlsx', sheet='Two_week_aggregate')
-education3_2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-education3_2$weeks <- factor(education3_2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+education3_2$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+education3_2$weeks <- factor(education3_2$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 education3_2 <- education3_2 %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -724,9 +720,9 @@ edu3_dt <- cbind(education3_dt, education3_2_dt)
 ```{r, housing, include=FALSE}
 # Housing Table 1a
 
-housing1a <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1a Missed last month’s payment (owners)_rev1.xlsx', sheet='Two_week_aggregate')
-housing1a$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-housing1a$weeks <- factor(housing1a$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+housing1a <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1a Missed last month’s payment (owners).xlsx', sheet='Two_week_aggregate')
+housing1a$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+housing1a$weeks <- factor(housing1a$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 housing1a <- housing1a %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -763,9 +759,9 @@ housing1a_co <- housing1a %>%
 
 # Housing Table 1b
 
-housing1b <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1b Missed last month’s payment (renters)_rev1.xlsx', sheet='Two_week_aggregate')
-housing1b$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-housing1b$weeks <- factor(housing1b$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+housing1b <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 1b Missed last month’s payment (renters).xlsx', sheet='Two_week_aggregate')
+housing1b$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+housing1b$weeks <- factor(housing1b$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 housing1b <- housing1b %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -819,9 +815,9 @@ housing_dt <- cbind(housing1a_dt, housing1b_dt)
 ```{r, anxiety, include=FALSE}
 # Mental Table 2a_b
 
-mental <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2a_b Experienced symptoms of anxiety OR depression more than half the days or nearly every day during the past 7 days.xlsx', sheet='Two_week_aggregate')
-mental$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12")
-mental$weeks <- factor(mental$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12"), ordered=TRUE)
+mental <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Table 2a_b Experienced symptoms of anxiety more than half the days during the past 7 days.xlsx', sheet='Two_week_aggregate')
+mental$weeks <- c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15")
+mental$weeks <- factor(mental$weeks, levels=c("04/23 - 05/12", "05/14 - 05/26", "05/28 - 06/09", "06/11 - 06/23", "06/25 - 07/07", "07/09 - 07/21", "07/22 - 08/05", "08/06 - 08/18", "08/19 - 09/14", "09/16 - 10/12","10/14 - 11/09", "11/11 - 12/07", "12/09 - 01/18", "01/20 - 02/15"), ordered=TRUE)
 
 mental <- mental %>%
   mutate(overall_perc = round(Num_Tot/Denom_Tot*100,1), 
@@ -898,7 +894,7 @@ mental_co <- mental %>%
 ```
 
 ```{r, projections, include=FALSE}
-cases <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Projections_cases_deaths.xlsx', sheet="Cases2")
+cases <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Projections_cases_deaths.xlsx', sheet="Cases4")
 
 cases$time <- c("Sep 2020", "Oct 2020", "Nov 2020", "Dec 2020", "Jan 2021", "Feb 2021", "Mar 2021", "Apr 2021", "May 2021", "June 2021", "July 2021", "Aug 2021", "Sep 2021", "Oct 2021", "Nov 2021", "Dec 2021")
 
@@ -907,7 +903,7 @@ cases <- cases %>%
 
 cases$time <- factor(cases$time, levels=c("Sep 2020", "Dec 2020", "Mar 2021", "June 2021", "Sep 2021", "Dec 2021"), ordered=TRUE)
 
-deaths <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Projections_cases_deaths.xlsx', sheet="Deaths2")
+deaths <- read.xlsx('C:\\Users\\mmartinez\\Documents\\Projects\\Misc Projects\\UNIDOS\\Data\\Projections_cases_deaths.xlsx', sheet="Deaths4")
 deaths$time <- c("Sep 2020", "Oct 2020", "Nov 2020", "Dec 2020", "Jan 2021", "Feb 2021", "Mar 2021", "Apr 2021", "May 2021", "June 2021", "July 2021", "Aug 2021", "Sep 2021", "Oct 2021", "Nov 2021", "Dec 2021")
 
 deaths <- deaths %>%
@@ -954,8 +950,8 @@ timeserieschart <- function(datasource, legend=TRUE, viztitle=" "){
                   ticksuffix = '%')
     
     margin <- list(autoexpand = TRUE,
-                   l = 150,
-                   r = 150,
+                   l = 50,
+                   r = 50,
                    t = 35)
     
 
@@ -1008,53 +1004,76 @@ timeserieschart <- function(datasource, legend=TRUE, viztitle=" "){
     
       event1 <- list(
       xref = 'paper',
-      x = 0,
+      x = .02,
       y = -.5,
       xanchor = 'left',
       yanchor = 'middle',
       text = paste0("<i>April 24 <br> 50K deaths</i>"),
       font = list(family = 'Arial',
-                  size = 10.5,
+                  size = 9.5,
                   color = "black"),
                   showarrow = FALSE)
       
       event2 <- list(
       xref = 'paper',
-      x = .20,
+      x = .15,
       y = -.5,
       xanchor = 'left',
       yanchor = 'middle',
       text = paste0("<i>May 28 <br> 100K deaths</i>"),
       font = list(family = 'Arial',
-                  size = 10.5,
+                  size = 9.5,
                   color = "black"),
                   showarrow = FALSE)
             
       event3 <- list(
       xref = 'paper',
-      x = .55,
+      x = .40,
       y = -.5,
       xanchor = 'left',
       yanchor = 'middle',
       text = paste0("<i>July 31 <br> CARES relief expired</i>"),
       font = list(family = 'Arial',
-                  size = 10.5,
+                  size = 9.5,
                   color = "black"),
                   showarrow = FALSE)
                   
-                  
       event4 <- list(
       xref = 'paper',
-      x = .89,
+      x = .63,
       y = -.5,
       xanchor = 'left',
       yanchor = 'middle',
       text = paste0("<i>Sept. 22 <br> 200K deaths</i>"),
       font = list(family = 'Arial',
-                  size = 10.5,
+                  size = 9.5,
+                  color = "black"),
+                  showarrow = FALSE)
+      
+      event5 <- list(
+      xref = 'paper',
+      x = .83,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>Dec. 14 <br> 300K deaths</i>"),
+      font = list(family = 'Arial',
+                  size = 9.5,
                   color = "black"),
                   showarrow = FALSE)
 
+      event6 <- list(
+      xref = 'paper',
+      x = .91,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>Jan. 19 <br> 400K deaths</i>"),
+      font = list(family = 'Arial',
+                  size = 9.5,
+                  color = "black"),
+                  showarrow = FALSE)
+      
     fig <- plot_ly(datasource, x = ~weeks)
     
     fig <- fig %>% add_trace(y = ~overall_perc, type = 'scatter', mode = 'lines+markers', opacity=.5,
@@ -1078,8 +1097,10 @@ timeserieschart <- function(datasource, legend=TRUE, viztitle=" "){
                       xaxis = xaxis, yaxis = yaxis, margin = margin,
                       autosize = TRUE,
                       showlegend = TRUE,
-                      shapes = list(vline(0), vline(2), vline(6), vline(9)),
-                      showlegend=legend)
+                      shapes = list(vline(0), vline(2), vline(6), vline(9), vline(12), vline(13)),
+                      showlegend=legend,
+                      legend = list(orientation = 'h',
+                                    x = .25, y = -.20))
     
     fig <- fig %>% layout(annotations = hisp_12) 
     fig <- fig %>% layout(annotations = white_12) 
@@ -1087,6 +1108,8 @@ timeserieschart <- function(datasource, legend=TRUE, viztitle=" "){
     fig <- fig %>% layout(annotations = event2) 
     fig <- fig %>% layout(annotations = event3) 
     fig <- fig %>% layout(annotations = event4)
+    fig <- fig %>% layout(annotations = event5)
+    fig <- fig %>% layout(annotations = event6)
     
     fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
     
@@ -1158,7 +1181,7 @@ nationalchart <- function(datasource, title="", viztitle=" "){
       
       event2 <- list(
       xref = 'paper',
-      x = .22,
+      x = .16,
       y = -.5,
       xanchor = 'left',
       yanchor = 'middle',
@@ -1170,7 +1193,7 @@ nationalchart <- function(datasource, title="", viztitle=" "){
             
       event3 <- list(
       xref = 'paper',
-      x = .60,
+      x = .42,
       y = -.5,
       xanchor = 'left',
       yanchor = 'middle',
@@ -1183,11 +1206,35 @@ nationalchart <- function(datasource, title="", viztitle=" "){
                   
       event4 <- list(
       xref = 'paper',
-      x = .92,
+      x = .64,
       y = -.5,
       xanchor = 'left',
       yanchor = 'middle',
       text = paste0("<i>Sept. 22 <br> 200K deaths</i>"),
+      font = list(family = 'Arial',
+                  size = 10.5,
+                  color = "black"),
+                  showarrow = FALSE)
+
+      event5 <- list(
+      xref = 'paper',
+      x = .85,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>Dec. 14 <br> 300K deaths</i>"),
+      font = list(family = 'Arial',
+                  size = 10.5,
+                  color = "black"),
+                  showarrow = FALSE)
+
+      event6 <- list(
+      xref = 'paper',
+      x = .92,
+      y = -.5,
+      xanchor = 'left',
+      yanchor = 'middle',
+      text = paste0("<i>Jan. 19 <br> 400K deaths</i>"),
       font = list(family = 'Arial',
                   size = 10.5,
                   color = "black"),
@@ -1251,13 +1298,15 @@ nationalchart <- function(datasource, title="", viztitle=" "){
                       xaxis = xaxis, yaxis = yaxis, margin = margin,
                       autosize = TRUE,
                       showlegend = TRUE,
-                      shapes = list(vline(0), vline(2), vline(6), vline(9)),
+                      shapes = list(vline(0), vline(2), vline(6), vline(9), vline(12), vline(13)),
                       showlegend=legend)
     
     fig <- fig %>% layout(annotations = event1)
     fig <- fig %>% layout(annotations = event2) 
     fig <- fig %>% layout(annotations = event3) 
     fig <- fig %>% layout(annotations = event4) 
+    fig <- fig %>% layout(annotations = event5) 
+    fig <- fig %>% layout(annotations = event6) 
     fig <- fig %>% layout(annotations = a)
     fig <- fig %>% config(modeBarButtonsToRemove = c("zoomIn2d", "zoomOut2d", "select2d", "hoverCompareCartesian", "hoverClosestCartesian", "lasso2d", "toggleSpikelines"), displaylogo = FALSE, displayModeBar=TRUE)
     
@@ -1271,7 +1320,7 @@ datatable(data,
           style="Bootstrap" , class = 'table-bordered table-condensed',
           rownames=FALSE,
           extensions = list('RowGroup' = NULL, 'Buttons' = NULL),
-          options = list(buttons = c('copy', 'excel', 'pdf', 'print'), dom = 'Btrp', pageLength=16, ordering=F, paging=T, rowGroup=list(dataSrc = 0),  initComplete = JS("function(settings, json) {$(this.api().table().header()).css({'font-size' : '14px'});}")),
+          options = list(buttons = c('copy', 'excel', 'pdf', 'print'), dom = 'Btrp', pageLength=24, ordering=F, paging=T, rowGroup=list(dataSrc = 0),  initComplete = JS("function(settings, json) {$(this.api().table().header()).css({'font-size' : '14px'});}")),
           caption = htmltools::tags$caption(
     style = 'caption-side: bottom; text-align: left;',
     'PRB analysis of data from the U.S. Census Bureau for UnidosUS, “By the Numbers: Latinos in the Time of Coronavirus."')) %>%
@@ -1327,6 +1376,8 @@ To better contextualize these trends, we include key dates in the timeline, in p
 <li>May 28, 2020: The United States surpasses 100,000 COVID-19 related deaths</li>
 <li>July 31, 2020: The economic relief measures in the CARES Act expire (supplemental unemployment insurance, rental assistance, etc.)</li>
 <li>September 22, 2020: The United States surpasses 200,000 COVID-19 related deaths</li>
+<li>December 14, 2020: The United States surpasses 300,000 COVID-19 related deaths</li>
+<li>January 19, 2021: The United States surpasses 400,000 COVID-19 related deaths</li>
 
 </ul>
 
@@ -1342,7 +1393,7 @@ Click on the “Latest Trends” drop-down menu above to explore recent social a
 ![](C:/Users/mmartinez/Documents/Projects/Misc Projects/UNIDOS/Dashboard/screenshot.png)
 </div>
 
-Please note that the Household Pulse Data have been released in phases. Data collection for Phase 1 began on April 23, 2020 and ended on July 21, 2020; data collection for Phase 2 began on August 19, 2020 and is expected to run through October 31, 2020. The dashboard will be updated as new data become available.
+Please note that the Household Pulse Data have been released in phases. Data collection for Phase 1 began on April 23, 2020 and ended on July 21, 2020; data collection for Phase 2 began on August 19, 2020 and ended on October 26, 2020; and data collection for Phase 3 started on October 28, 2020. The dashboard will be updated as new data become available.
 
 For more information about specific indicators from the Household Pulse Survey, please click on the “Notes and Definitions” link in the “Latest Trends” menu above.
 
@@ -1371,13 +1422,13 @@ Notes and Definitions {data-navmenu="Latest Trends"}
 Row
 ------------------------------------------------------------------------
 
-### Data Sources
+### Notes and Definitions
 
 <center><h4>Notes and Definitions</h4></center>
 
 Data on recent social and economic trends are based on PRB’s analysis of the U.S. Census Bureau’s 2020 Household Pulse Survey Public Use Files.
 
-Household Pulse Survey data were compiled between April and October 2020, but there was a gap in data collection between July 21 and August 19. Denominators for all Household Pulse Survey indicators in the dashboard exclude respondents who did not provide valid responses.
+Household Pulse Survey data were available starting in the spring of 2020, but there was a gap in data collection between July 21 and August 19. Denominators for all Household Pulse Survey indicators in the dashboard exclude respondents who did not provide valid responses.
 
 These estimates are subject to both sampling and nonsampling error. Data are presented as two-week averages (weeks 1-2, weeks 3-4, etc.) to reduce sampling error, which may be substantial for certain states and population subgroups.
 
@@ -1426,7 +1477,7 @@ Row
 <strong>Overview</strong><br>
 Projections are based on the Population Reference Bureau (PRB)’s analysis of data from the U.S. Centers for Disease Control and Prevention (CDC) and other sources. To project the potential number of COVID-19 cases and deaths that could occur in coming months, we first analyzed trends in confirmed cases and deaths for the population as a whole, as well as for the Hispanic/Latino population.
 
-Starting with data available through September 2020, we applied three scenarios:
+Starting with data available through March 31, 2021, we applied three scenarios:
 
 <ul>
 <li><strong>Low: Masking and Other Measures Limit Spread</strong><br>
@@ -1434,13 +1485,14 @@ This scenario assumes a relatively low rate of community spread.</li>
 <li><strong>Middle: Mixed Success at Limiting Spread</strong><br>
 This scenario is the midpoint between the low and high scenarios.</li>
 <li><strong>High: Few Preventive Measures, Widespread Transmission</strong><br>
-This scenario assumes few, or ineffective, preventive measures and rapid growth in the number of new cases.</li>
+This scenario assumes few, or ineffective, preventive measures and rapid growth in the number of new cases, with spread exacerbated by new—more highly contagious—coronavirus variants.</li>
 </ul>
 
-Each of these scenarios results in a projected total number of COVID-19 cases for each state.
-We then use the projected total number of cases to estimate the total number of COVID-19 deaths, by assuming that a certain share of newly infected people succumb to the disease. This rate—deaths as a proportion of new cases—is based on data available for August and September 2020.
+All scenarios assume that vaccine roll-out is successful and transmission rates fall in August 2021.
 
-Next, we calculated the projected number of Hispanic/Latino cases and deaths as a share of the total number of cases and deaths in each state. The share is based on data available for August and September 2020.
+Each of these scenarios results in a projected total number of COVID-19 cases for each state. We then use the projected total number of cases to estimate the total number of COVID-19 deaths, by assuming that a certain share of newly infected people succumb to the disease. This rate—deaths as a proportion of new cases—is based on data available for August 2020 through March 2021.
+
+Next, we calculated the projected number of Hispanic/Latino cases and deaths as a share of the total number of cases and deaths in each state. The share is based on data available for August 2020 through March 2021.
 
 Projections are provided for six states: Arizona, California, Colorado, Florida, Nevada, and Texas. These states represent the largest and fastest growing Hispanic populations in the United States. More than half of the nation’s Latino population lives in California, Texas and Florida alone.
 <br>
@@ -1452,36 +1504,33 @@ Input data sources include the following:
 <li>The COVID Tracking Project</li>
 <li>Kaiser Family Foundation</li>
 <li>State departments of health for Arizona, California, Colorado, Florida, Nevada, and Texas</li>
-<li>Institute of Health Metrics and Evaluation, University of Washington</li>
 </ul>
 
 <strong>Detailed Methods</strong><br>
-Starting with data available through September 2020, we apply a series of growth rates (per month, per state) over the projection period. The scenarios are as follows:
+Starting with data available through March 31, 2021, we apply a series of growth rates (per month, per state) over the projection period. The scenarios are as follows:
 
 <ul>
 <li><strong>Low: Masking and Other Measures Limit Spread</strong><br>
-This scenario assumes a relatively low rate of community spread. The monthly growth rate in cases ranges from 8% to 20% (depending on the state) through December 2020 and tapers off to 5% by February 2020. Once a state reaches 5.2% of the population with a positive case, the growth rate drops to 1% per month. (See description below.)</li><br>
+This scenario assumes April cases are at the low end of ensemble model projections from CDC, and thereafter there is a relatively low rate of community spread. Once a state reaches 6% of the population with a positive case, the growth rate drops to 2% per month. (See description below.)</li><br>
 <li><strong>Middle: Mixed Success at Limiting Spread</strong><br>
 This scenario shows a rate of growth that is the midpoint between the low and high scenarios.</li><br>
 <li><strong>High: Few Preventive Measures, Widespread Transmission</strong><br>
-This scenario assumes few, or ineffective, preventive measures and widespread community transmission. The monthly growth rate in cases ranges from 14% to 37% (depending on the state) through December 2020 and tapers off to 5% by March 2020.</li>
+This scenario assumes few, or ineffective, preventive measures and widespread community transmission resulting, at least in part, from the spread of new coronavirus variants. Once a state reaches 8.3% of the population with a positive case, the growth rate drops to 3% per month.</li>
 </ul>
 
-From the existing case level, we use recent growth rates in cases to project the change in cases expected in the next month. We then add these new cases to the prior-month total. To project the first month of growth in number of cases, we benchmark state growth rates to the “ensemble model” four-week projection from the <a href="https://www.cdc.gov/coronavirus/2019-ncov/covid-data/forecasting-us.html" target="_blank">U.S. Centers for Disease Control and Prevention</a> (CDC) for the week ending October 31, 2020. The low scenario incorporates the growth in cases from CDC’s 25th percentile ensemble projection. The middle scenario incorporates the growth in cases from CDC’s ensemble point projection. The high scenario incorporates growth in cases from the 75th percentile ensemble projection.
+From the existing case level, we use recent growth rates in cases to project the change in cases expected in the next month. We then add these new cases to the prior-month total. To project the first month of growth in number of cases, we benchmark state growth rates to the “ensemble model” four-week projection from the <a href="https://www.cdc.gov/coronavirus/2019-ncov/covid-data/forecasting-us.html">U.S. Centers for Disease Control and Prevention</a> (CDC) for the week ending April 24, 2021. The low scenario incorporates the growth in cases from CDC’s 25th percentile ensemble projection. The middle scenario incorporates the growth in cases from CDC’s ensemble point projection. The high scenario incorporates growth in cases from the 75th percentile ensemble projection.
 
-For the three-month time horizon, we benchmark state growth rates to the low/universal masking and high/mandates easing scenarios from the <a href="https://covid19.healthdata.org/united-states-of-america?view=total-deaths&tab=trend" target="_blank">Institute for Health Metrics and Evaluation at the University of Washington</a>.
-
-From March 2021 to the end of the projection horizon, we show the rate of growth in new cases tapering off, with monthly increases of 5% until a state begins to approach “herd immunity,” at which point growth rates decrease to 1% per month. Herd immunity varies by scenario. In the low scenario, the threshold is 52% of the population infected and recovered, and in the high scenario the threshold is 75%.<sup>1</sup> Because the data available reflect the number of confirmed cases, rather than total number of infections, we must make an assumption about the level of under-reporting of cases relative to infections. While the exact under-reporting level is unknown, and likely varies by location, this model assumes that about 1 in 10 infections is recorded as a confirmed case—or that there are about 10 times more infections than there are confirmed cases. Thus, the model assumes “herd immunity” when the case/population thresholds are 5.2% and 7.5%, for the low and high scenarios, respectively.<sup>2</sup>
+From April 2021 to the end of the projection horizon, we show the rate of growth in new cases tapering off, with monthly increases of up to 8% until a state begins to approach “herd immunity,” at which point growth rates decrease to 0.5% per month in the low scenario and 3% in the high scenario. Herd immunity also varies by scenario. In the low scenario, the threshold is 60% of the population infected and recovered, and in the high scenario the threshold is 83%.<sup>1</sup> Because the data available reflect the number of confirmed cases, rather than total number of infections, we must make an assumption about the level of under-reporting of cases relative to infections. While the exact under-reporting level is unknown, and likely varies by location, this model assumes that about 1 in 10 infections is recorded as a confirmed case—or that there are about 10 times more infections than there are confirmed cases. Thus, the model assumes “herd immunity” when the case/population thresholds are 6% and 8.3%, for the low and high scenarios, respectively.<sup>2</sup>
 
 Each of these scenarios results in a projected total number of COVID-19 cases for each state. The projected total number of cases then influences the projected total number of COVID-19 deaths, as a share of newly infected people succumb to the disease.
 
 <strong>From Projected Total Cases to Projected Deaths</strong><br>
-To project the number of deaths, we begin with the number of new cases and apply a ratio based on the historical number of deaths relative to new cases. Because these projections are based on monthly data, and the population at risk of death may span cases from both the current month and the prior month, we apply the transition rate to half of the new cases from the prior month and half of the new cases from the current month to develop an estimate of deaths in a given month.<sup>3</sup> Although the transition rates have declined slightly since the pandemic began, the rates have started to stabilize in recent months. Thus, we hold the transition rates constant—at the lower of their August or September levels—through the projection period. The transition rates are constant across all three projection scenarios.
+To project the number of deaths, we begin with the number of new cases and apply a ratio based on the historical number of deaths relative to new cases. Because these projections are based on monthly data, and the population at risk of death may span cases from both the current month and the prior month, we apply the transition rate to half of the new cases from the prior month and half of the new cases from the current month to develop an estimate of deaths in a given month.<sup>3</sup> Although the transition rates have declined slightly since the pandemic began, the rates have started to stabilize in recent months. Thus, we hold the transition rates constant at recent levels through the projection period. The transition rates are constant across all three projection scenarios.
 
 <strong>Projecting COVID-19 Cases and Deaths for the Hispanic/Latino Population</strong><br>
 Historical data on cases and deaths in the Hispanic/Latino population are from <a href="https://covidtracking.com/race" target="_blank">The COVID Racial Data Tracker</a> from the COVID Tracking Project at The Atlantic. A substantial share of cases reported from Texas are missing racial/ethnic data. Historical Hispanic/Latino cases in Texas are estimated using total cases and the Hispanic/Latino share of cases with known race/ethnicity.
 
-For each state and scenario, the number of projected Hispanic/Latino cases and deaths is a constant share of the total number of cases and deaths. The shares are calculated based on an average of data from recent months, with data drawn from two key sources: the <a href="https://covidtracking.com/race" target="_blank">COVID Tracking Project</a> (which reports cases and deaths with known race/ethnicity) and the <a href="https://www.kff.org/other/state-indicator/covid-19-cases-by-race-ethnicity/" target="_blank">Kaiser Family Foundation cases by race/ethnicity</a> and <a href="https://www.kff.org/other/state-indicator/covid-19-deaths-by-race-ethnicity/?currentTimeframe=0&sortModel=%7B%22colId%22:%22Location%22,%22sort%22:%22asc%22%7D" target="_blank">deaths by race/ethnicity</a> (which reports shares by race/ethnicity among cases/deaths for which race/ethnicity is known).<sup>4</sup>  The Hispanic/Latino share is held constant across all three projection scenarios.</p>
+For each state and scenario, the number of projected Hispanic/Latino cases and deaths is a constant share of the total number of cases and deaths. The shares are calculated based on an average of data from recent months, with data drawn from two key sources: the <a href="https://covidtracking.com/race" target="_blank">COVID Tracking Project</a> (which reports cases and deaths with known race/ethnicity) and the <a href="https://www.kff.org/other/state-indicator/covid-19-cases-by-race-ethnicity/" target="_blank">Kaiser Family Foundation cases by race/ethnicity</a> and <a href="https://www.kff.org/other/state-indicator/covid-19-deaths-by-race-ethnicity/?currentTimeframe=0&sortModel=%7B%22colId%22:%22Location%22,%22sort%22:%22asc%22%7D" target="_blank">deaths by race/ethnicity</a> (which reports shares by race/ethnicity among cases/deaths for which race/ethnicity is known). The Hispanic/Latino share is held constant across all three projection scenarios.</p>
 
 <hr>
 1. The herd immunity thresholds are based on the herd immunity formula 1-1/R<sub>0</sub>. While data are still limited, and R<sub>0</sub> is not known exactly, there is increasing evidence that the R<sub>0</sub> for the SARS-CoV-2 virus ranges from 2.5-4.0, and that masking reduces R<sub>0</sub> by about 70% to 2.1. For additional information, see John Drake, “Face Masks Could Prevent 50 Million Covid-19 Cases In The US,” Forbes, October 9, 2020, <a href="https://bit.ly/3nPnVCv" target="_blank">https://bit.ly/3nPnVCv</a>; and Arnaud Fontanet and Simon Cauchemez, “COVID-19 Herd Immunity: Where Are We?” <i>Nature Reviews Immunology</i>, September 2020, <a href="https://go.nature.com/318dxMf" target="_blank">https://go.nature.com/318dxMf</a>. 
@@ -1489,8 +1538,6 @@ For each state and scenario, the number of projected Hispanic/Latino cases and d
 2. Considering the low rate of testing in the United States, there is evidence that COVID-19 infections are under-reported by a factor of about 10. Thus, our threshold for nearly population-wide infection is approximately 10% of the population with a confirmed case.
 
 3. Several analyses suggest that median time from symptom onset to death is in the two-week range. For additional information, see H. Lau et al., “Evaluating the Massive Underreporting and Undertesting of COVID-19 cases in Multiple Global Epicenters,” <i>Pulmonology</i>, June 2020, <a href="https://bit.ly/3iZCWxN" target="_blank">https://bit.ly/3iZCWxN</a>; and U.S. Centers for Disease Control and Prevention, “COVID-19 Pandemic Planning Scenarios,” September 2020, <a href="https://bit.ly/2IsAIdL" target="_blank">https://bit.ly/2IsAIdL</a>. 
-
-4. For the percent of total cases that are Hispanic/Latino, we average data from August-September 2020. For percent of deaths that are Hispanic/Latino, we average data from July-September 2020. We use a shorter period for case demographics because of concerns about the quality of race/ethnicity coding on case reports earlier in the year.
 
 
 Loss of Employment Income {data-navmenu="Latest Trends"}
@@ -2342,7 +2389,7 @@ Row {.tabset}
 ### United States
 ```{r, mental us}
 a <- list(
-  text = "Adults Who Felt Anxious for More Than Half of the Days in the Past Week",
+  text = "Adults Who Felt Anxious for More Than <br> Half of the Days in the Past Week",
   # font = f,
   xref = "paper",
   yref = "paper",
@@ -3171,19 +3218,19 @@ xaxis <- list(title = "",
     fig <- fig %>% add_trace(y = ~texas_low_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
                              marker = list(color = 'rgb(228, 27, 35)', width = 5),
                              line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dash'), name = 'Hispanic/Latino, Low Estimate',
-                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(cases$texas_low_hispanic, big.mark=","), "<extra></extra>"))  
+                             hovertemplate = paste0("Hispanic/Latino, low estimate: ", prettyNum(round(cases$texas_low_hispanic,0), big.mark=","), "<extra></extra>"))  
    
      fig <- fig %>% add_trace(y = ~texas_mid_hispanic, type = 'scatter', mode = 'lines+markers',
                              marker = list(color = 'rgb(228, 27, 35)', width = 5),
                              line = list(color = 'rgb(228, 27, 35)', width = 2),
                              name = 'Hispanic/Latino, Middle Estimate',
-                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(cases$texas_mid_hispanic, big.mark=","), "<extra></extra>")) 
+                             hovertemplate = paste0('Hispanic/Latino, middle estimate: ', prettyNum(round(cases$texas_mid_hispanic,0), big.mark=","), "<extra></extra>")) 
      
      fig <- fig %>% add_trace(y = ~texas_high_hispanic, type = 'scatter', mode = 'lines+markers', opacity=.5,
                              marker = list(color = 'rgb(228, 27, 35)', width = 5),
                              line = list(color = 'rgb(228, 27, 35)', width = 2, dash='dot'),
                              name = 'Hispanic/Latino, High Estimate',
-                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(cases$texas_high_hispanic, big.mark=","), "<extra></extra>"))
+                             hovertemplate = paste0('Hispanic/Latino, high estimate: ', prettyNum(round(cases$texas_high_hispanic,0), big.mark=","), "<extra></extra>"))
      
     fig <- fig %>% add_trace(y = ~texas_low_total, type = 'scatter', mode = 'lines+markers', opacity=.5,
                              marker = list(color = 'rgb(69,117,180)', width = 5),
