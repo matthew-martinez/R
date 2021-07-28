@@ -95,14 +95,20 @@ library(tidyverse)
   results2 <- results2 %>% rename(Fight.Number = Match) %>% filter (EventID != 8788)
   results2$Date <- as.Date(as.character(results2$Date), "%Y-%m-%d")
   
+  results3 <- read.csv("/home/m/Documents/R/MMA/data/7-21-21-scrape.csv")[,2:14]
+  results3 <- results3 %>% rename(Fight.Number = Match) %>% filter (EventID != 8788)
+  results3$Date <- as.Date(as.character(results3$Date), "%Y-%m-%d")
+  
   # binding original and the newer file - keep doing this for each additional file 
   # (e.g., repeat lines 94-96, then bind all results# dfs together)
-  results <- rbind(results, results2)
+  results <- rbind(results, results2, results3)
   
   results2 <- results2[order(results2$Date, results2$Fight.Number), ]
   
+  results3 <- results3[order(results3$Date, results3$Fight.Number), ]
+  
   # previously calculated scores file - we will search/append new fighters/scores/update scores to the original file
-  scores<- read.csv("/home/m/Documents/R/MMA/data/scoresFeb1521.csv")[,2:6]
+  scores<- read.csv("/home/m/Documents/R/MMA/data/scoresfinalFullFebruary2021.csv")[,2:6] #scoresFeb1521.csv <- old file 7/27/21
   scores$Date <- as.Date(as.character(scores$Date), "%m/%d/%Y")
   scoresFinal <- scores
   
@@ -117,7 +123,7 @@ library(tidyverse)
   scores <- scores[!duplicated(scores$Fighter),]
   
   # change results2 to the latest event file - need to make a list of new fighters to calc scores for
-  allNames <- c(as.character(results2$FighterID), as.character(results2$OpponentID))
+  allNames <- c(as.character(results3$FighterID), as.character(results3$OpponentID))
   namesNew <- allNames[allNames %in% scores$Fighter == FALSE]
   namesNew <- unique(namesNew)
   scoresNew <- data.frame(namesNew, 1000, 1000, NA, NA)
@@ -146,5 +152,5 @@ library(tidyverse)
   
   # Uncomment to save full list to file
   #save_rankings(scoresFinal, "/home/m/Documents/R/MMA/scoresfinal-12-17-FULL2.txt")
-  write.csv(scoresFinal, "/home/m/Documents/R/MMA/data/scoresfinalFullFebruary2021.csv")
+  write.csv(scoresFinal, "/home/m/Documents/R/MMA/data/scoresfinalFullJuly2021.csv")
   #save_rankings(ranked, "/home/m/Documents/R/MMA/rankings-12-17-test.txt")

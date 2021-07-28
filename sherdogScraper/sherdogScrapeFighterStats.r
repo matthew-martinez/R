@@ -11,12 +11,17 @@ dSelect <- d %>%
   filter(Promotion == "Ultimate Fighting Championship (UFC)" | Promotion == "Bellator MMA")
 
 # Making vectors of fighter and opponent IDs and bringing them together
-fighterIDs <- unique(dSelect$FighterID)
-opponentIDs <- unique(dSelect$OpponentID)
+#fighterIDs <- unique(dSelect$FighterID)
+#opponentIDs <- unique(dSelect$OpponentID)
 
-allIDs <- c(fighterIDs, opponentIDs)
+# allIDs <- c(fighterIDs, opponentIDs)
+# 
+# allIDs <- unique(allIDs)
 
-allIDs <- unique(allIDs)
+allIDs <- c("Tafon-Nchukwi-282049",
+            "Jamie-Pickett-72595",
+            "Sam-Hughes-231521",
+            "Tecia-Torres-85096")
 
 # Setting up the loop
 i <- 0
@@ -50,4 +55,4 @@ for (i in 1:length(allIDs)) {
 endTime <- Sys.time()
 endTime - startTime
 
-write.csv(fullRecords, "/home/m/Documents/R/MMA/UFCBellatorFights.csv")
+write.csv(fullRecords, "/home/m/Documents/R/MMA/UFCBellatorFights2.csv")
