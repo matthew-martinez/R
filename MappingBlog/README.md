@@ -1,4 +1,4 @@
-# Mapping in R
+# Mapping Census Data in R
 
 ## Goal
 
