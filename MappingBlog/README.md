@@ -1,11 +1,15 @@
 # Mapping in R
 
-The .r script walks you through creating quick and easy web-ready interactive maps using R.
+## Goal
 
-## Libraries
+Creating quick and easy web-ready interactive maps using R.
+
+## Libraries used
 - tidyverse
 - tidycensus
 - mapview
 - leaflet
 - htmltools
 - htmlwidgets
+
+## Links
