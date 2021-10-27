@@ -2,7 +2,7 @@
 
 ## Goal
 
-Efficiently create self-contained web-ready interactive maps of U.S. Census data using R.
+Efficiently create self-contained web-ready interactive maps of U.S. Census data using R. In the tutorial, I look at median household income across census tracts in Washington, D.C.
 
 ## Data Source
 
