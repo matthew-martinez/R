@@ -52,7 +52,7 @@ centroidsFullDf <- centroidsFullDf %>% distinct()
 # Loop for grabbing 2011-2018 PR migration data
 prFlowsFull <- NULL
 
-for (i in 2010:2018){
+for (i in 2018){
   prFlows <- get_flows(
     geography="county",
     state="Puerto Rico",
@@ -69,8 +69,8 @@ prFlowsFullDf <- prFlowsFull
 # using dplyr to group by and sum up number of migrants by location
 prFlowsFullDf <- prFlowsFullDf %>%
   filter(is.na(GEOID2) == FALSE & 
-           variable == "MOVEDIN") %>% # only interested in number of individuals who have MOVED IN to a location
-  group_by(GEOID2) %>% summarise(estimate = sum(estimate, na.rm=TRUE))
+           variable == "MOVEDOUT") # %>% # only interested in number of individuals who have MOVED IN to a location
+  #group_by(GEOID2) %>% summarise(estimate = sum(estimate, na.rm=TRUE))
 
 # merging geospatial data to the migration total data by GEOID2
 prFlowsMerge <- merge(prFlowsFullDf, centroidsFullDf, by="GEOID2", all.x=TRUE)
@@ -86,7 +86,7 @@ prFlowsMerge <- prFlowsMerge %>% filter(is.na(FULL2_NAME) == FALSE &
 
 # Using Leaflet to make a bubble map
 # This map only shows locations where PR migrants moved to
-popup_map <- paste0("<b>Number of migrants from Puerto Rico, 2011-2018</b> <br>",
+popup_map <- paste0("<b>Number of migrants from Puerto Rico, 2014-2018</b> <br>",
                     "Location: ", prFlowsMerge$Location, ", ", prFlowsMerge$State, "<br>",
                            "Estimate: ", prFlowsMerge$estimate)
 
@@ -113,7 +113,7 @@ g <- list(
   showland = TRUE,
   showlakes = TRUE,
   lakecolor = toRGB('white'),
-  landcolor = "#DAE5ED", #DBE9EE
+  landcolor = "#d1dce0", #DBE9EE #DAE5ED
   subunitwidth = 1,
   countrywidth = 1,
   subunitcolor = toRGB("white"),
@@ -139,7 +139,7 @@ fig <- fig %>% add_markers(
                  "<b>Estimate: </b>", formatC(prFlowsMerge$estimate, big.mark=","))) %>% 
 layout(geo = g, 
        showlegend=FALSE, 
-       title="Puerto Rican Migration To United States: Totals By County, 2010-2018",
+       title="Puerto Rican Migration To Mainland United States <br /> Totals By County, 2014-2018",
        font="Arial") %>% 
   config(displayModeBar = F,
          scrollZoom=TRUE)
@@ -148,27 +148,32 @@ fig
 
 
 
-quantile(prFlowsMerge$estimate)
+quantile(prFlowsMerge$estimate, probs = seq(0, 1, 0.20))
 
-prFlowsMerge$estimateCat[prFlowsMerge$estimate <= 63] <- "Very Low"
-prFlowsMerge$estimateCat[prFlowsMerge$estimate > 63 & prFlowsMerge$estimate <= 195] <- "Low"
-prFlowsMerge$estimateCat[prFlowsMerge$estimate > 195 & prFlowsMerge$estimate <= 515] <- "Moderate"
-prFlowsMerge$estimateCat[prFlowsMerge$estimate > 515] <- "High"
+mean(prFlowsMerge$estimate)
+sd(prFlowsMerge$estimate)
 
-prFlowsMerge$estimateCat <- factor(prFlowsMerge$estimateCat, levels=c("Very Low","Low","Moderate","High"), ordered=T)
+prFlowsMerge$estimateCat[prFlowsMerge$estimate <= 9] <- "Very Low"
+prFlowsMerge$estimateCat[prFlowsMerge$estimate > 9 & prFlowsMerge$estimate <= 24] <- "Low"
+prFlowsMerge$estimateCat[prFlowsMerge$estimate > 24 & prFlowsMerge$estimate <= 61.4] <- "Moderate"
+prFlowsMerge$estimateCat[prFlowsMerge$estimate > 61.4] <- "High"
+prFlowsMerge$estimateCat[prFlowsMerge$estimate > 156.6] <- "Very High"
+
+prFlowsMerge$estimateCat <- factor(prFlowsMerge$estimateCat, levels=c("Very Low","Low","Moderate","High", "Very High"), ordered=T)
+
 
 fig2 <- plot_geo(prFlowsMerge, lat = ~Lat, lon = ~Long)
 fig2 <- fig2 %>% add_markers(
   text = ~paste0("<b>", prFlowsMerge$Location, ", ", prFlowsMerge$State, "</b> <br>",
                  "<b>Estimate: </b>", formatC(prFlowsMerge$estimate, big.mark=",")),
   color = ~estimateCat,
-  colors = c("#fcbba1","#fb6a4a","#cb181d", "#67000d"),
+  colors = c("#fee0d2", "#fc9272","#ef3b2c", "#a50f15", "#67000d"),
   symbol = I("circle"), 
-  size = I(56), 
+  size = I(30), 
   hoverinfo = "text"
 )
 fig2 <- fig2 %>% layout(
-  title = 'Puerto Rican Migration To United States<br /> Totals By County, 2010-2018', 
+  title = 'Puerto Rican Migration To Mainland United States<br /> Totals By County, 2014-2018', 
   geo = g,
   legend=list(title=list(text='<b> Migration Level </b>'),
               y=.001,
