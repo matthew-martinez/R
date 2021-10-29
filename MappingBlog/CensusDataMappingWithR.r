@@ -17,6 +17,21 @@ library(htmltools)
 # extract data from U.S. Census Bureau API with tidycensus
 # tidycensus allows you to easily pull in Census data along with geometric data for mapping
 # get_acs pulls in ACS data from the API.
+
+dataNoSpatial <- get_acs(geography="tract",
+                state="DC",
+                variables=c(
+                  medianIncome="B19013_001"),
+                year = 2019,
+                output="wide")
+
+head(dataNoSpatial) # display the first five rows of the median income data
+
+# the data returned from tidycensus provides the GEOID, name of location, and the estimate and margin of error for each requested table
+
+# adding the argument geometry=TRUE will also pull in the underlying geometric data for the data request
+# this will allow for easily mapping US Census data
+
 data <- get_acs(geography="tract",
                   state="DC",
                   variables=c(
@@ -56,7 +71,7 @@ mapviewMap # viewing the mapview map
 # saveWidget from the htmlwidgets package lets you save the mapview object as an .html file in a line of code
 # selfcontained=TRUE will make the .html file include all additional code (JavaScript) without it, additional JS code will be saved outside the .html file
 # @map needs to be appended to the end of the mapview object name to save it using saveWidget
-saveWidget(mapviewMap@map, file=".//Projects//blog//medianIncomeMapview.html", selfcontained=TRUE, title="Mapview - Median Income in Washington D.C.")
+saveWidget(mapviewMap@map, file="medianIncomeMapview.html", selfcontained=TRUE, title="Mapview - Median Income in Washington D.C.")
 
 
 
@@ -109,4 +124,4 @@ leafletMap <-leaflet() %>%
 leafletMap
 
 # code for saving the .html file
-saveWidget(leafletMap, file=".//Projects//blog//medianIncomeLeaflet.html", selfcontained=TRUE, title="Leaflet - Median Income in Washington D.C.")
+saveWidget(leafletMap, file="medianIncomeLeaflet.html", selfcontained=TRUE, title="Leaflet - Median Income in Washington D.C.")
