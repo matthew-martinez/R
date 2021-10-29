@@ -66,6 +66,9 @@ mapviewOptions(fgb = FALSE) # setting an option for mapview due to a pandoc erro
 
 mapviewMap <- mapview(data, zcol=c("medianIncomeE"), legend = TRUE, hide = TRUE) # building the mapview map object
 
+# the zcol argument with concatenated variable names lets you plot as many variables on one map as possible
+# you are able to switch between the variable displayed using the layers button on the left side of the map.
+
 mapviewMap # viewing the mapview map
 
 # saveWidget from the htmlwidgets package lets you save the mapview object as an .html file in a line of code
