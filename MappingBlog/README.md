@@ -9,6 +9,7 @@ Data is from the U.S. Census Bureau's American Community Survey (ACS, 5-year, 20
 ## Files
 CensusDataMappingWithR.r
 - Annotated code for the analysis presented in the tutorial
+
 ACSMedIncomeData2019.csv
 - The data acquired from the U.S. Census Bureau API used for the tutorial
 
