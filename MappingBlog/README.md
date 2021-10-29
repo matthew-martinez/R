@@ -11,7 +11,7 @@ CensusDataMappingWithR.r
 - Annotated code for the analysis presented in the tutorial
 
 ACSMedIncomeData2019.csv
-- The data acquired from the U.S. Census Bureau API used for the tutorial
+- The data acquired from the U.S. Census Bureau API used for the analysis
 
 ## Libraries Used
 The code requires the following libraries be installed:
